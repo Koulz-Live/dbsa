@@ -261,14 +261,16 @@ This project follows strict conventions defined in `.github/copilot-instructions
 - [x] User/role management
 - [x] Content List screen with search, filters, and pagination
 - [x] Content Editor screen with workflow actions
+- [x] Page Builder with 5 block types (Hero, RichText, CTA, Cards, ImageGallery)
+- [x] Drag-and-drop block interface
 - [x] React Router integration with protected routes
 
 ### 🔄 In Progress
 
-- [x] Frontend editorial console screens (2/4 complete)
+- [ ] Frontend editorial console screens (3/4 complete)
   - ✅ Content List
   - ✅ Content Editor
-  - ⏳ Page Builder component
+  - ✅ Page Builder component (5 block types, drag-and-drop)
   - ⏳ Audit Logs screen
 - [ ] Media library UI
 - [ ] Taxonomy management UI
@@ -283,16 +285,18 @@ This project follows strict conventions defined in `.github/copilot-instructions
 
 **📊 Current Metrics:**
 
-- Total files: 75+
-- Lines of code: ~11,000+
+- Total files: 90+
+- Lines of code: ~13,000+
 - API endpoints: 30+
 - Database tables: 15
 - RLS policies: 40+
-- Frontend screens: 2/4 complete
+- Frontend screens: 3/4 complete
+- Page Builder blocks: 5 types
 
 **📚 Documentation:**
 
 - [QUICK_START.md](./QUICK_START.md) - Quick reference and testing guide
+- [PAGE_BUILDER.md](./PAGE_BUILDER.md) - Page Builder complete documentation
 - [IMPLEMENTATION_SUMMARY.md](./IMPLEMENTATION_SUMMARY.md) - Complete project summary
 - [FRONTEND_PROGRESS.md](./FRONTEND_PROGRESS.md) - Frontend development tracking
 - [BACKEND_COMPLETE.md](./BACKEND_COMPLETE.md) - Backend implementation overview

@@ -1,7 +1,27 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { apiClient } from "../lib/apiClient";
-import { ContentItem, ContentStatus } from "../../shared/types";
+import { ContentItem, ContentStatus, Block } from "../../shared/types";
+import { PageBuilder, PageBlock } from "../components/PageBuilder";
+
+// Helper to convert database blocks to PageBlock format
+const convertToPageBlocks = (blocks: Block[] | undefined): PageBlock[] => {
+  if (!blocks) return [];
+  return blocks.map((block, index) => ({
+    ...block,
+    order: index,
+    type: block.type.toLowerCase() as any, // Convert "Hero" -> "hero", etc.
+  })) as PageBlock[];
+};
+
+// Helper to convert PageBlocks back to database format
+const convertFromPageBlocks = (blocks: PageBlock[]): Block[] => {
+  return blocks.map((block) => ({
+    id: block.id,
+    type: (block.type.charAt(0).toUpperCase() + block.type.slice(1)) as any,
+    data: block.data as Record<string, unknown>,
+  }));
+};
 
 interface ContentFormData {
   title: string;
@@ -13,6 +33,7 @@ interface ContentFormData {
   meta_description: string;
   meta_keywords: string[];
   hero_image_url: string;
+  page_blocks: PageBlock[]; // Add page blocks
 }
 
 export function ContentEditor() {
@@ -35,6 +56,7 @@ export function ContentEditor() {
     meta_description: "",
     meta_keywords: [],
     hero_image_url: "",
+    page_blocks: [],
   });
 
   useEffect(() => {
@@ -60,6 +82,7 @@ export function ContentEditor() {
         meta_description: response.data.meta_description || "",
         meta_keywords: response.data.meta_keywords || [],
         hero_image_url: response.data.hero_image_url || "",
+        page_blocks: convertToPageBlocks(response.data.page_data?.blocks),
       });
     } catch (err: any) {
       setError(err.response?.data?.message || "Failed to load content");
@@ -75,13 +98,21 @@ export function ContentEditor() {
       setSaving(true);
       setError(null);
 
+      // Prepare payload with page_data
+      const payload = {
+        ...formData,
+        page_data: {
+          blocks: convertFromPageBlocks(formData.page_blocks),
+        },
+      };
+
       if (isEditMode) {
-        await apiClient.patch(`/content/${id}`, formData);
+        await apiClient.patch(`/content/${id}`, payload);
         alert("Content updated successfully!");
       } else {
         const response = await apiClient.post<ContentItem>(
           "/content",
-          formData,
+          payload,
         );
         alert("Content created successfully!");
         navigate(`/content/${response.data.id}`);
@@ -376,30 +407,15 @@ export function ContentEditor() {
                 </div>
               </div>
 
-              {/* Page Builder Placeholder */}
+              {/* Page Builder */}
               <div className="bg-white rounded-lg shadow p-6">
                 <h2 className="text-xl font-semibold mb-4">Page Content</h2>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                  <svg
-                    className="mx-auto h-12 w-12 text-gray-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                    />
-                  </svg>
-                  <p className="mt-2 text-sm text-gray-600">
-                    Page Builder will be implemented here
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    Drag-and-drop blocks, rich text editor, etc.
-                  </p>
-                </div>
+                <PageBuilder
+                  blocks={formData.page_blocks}
+                  onChange={(blocks) =>
+                    setFormData({ ...formData, page_blocks: blocks })
+                  }
+                />
               </div>
 
               {/* Form Actions */}
