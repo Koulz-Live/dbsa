@@ -1,13 +1,16 @@
-import React from 'react';
-import { RichTextBlock } from '../types';
+import React from "react";
+import { RichTextBlock } from "../types";
 
 interface RichTextBlockEditorProps {
   block: RichTextBlock;
   onChange: (block: RichTextBlock) => void;
 }
 
-export const RichTextBlockEditor: React.FC<RichTextBlockEditorProps> = ({ block, onChange }) => {
-  const updateData = (updates: Partial<RichTextBlock['data']>) => {
+export const RichTextBlockEditor: React.FC<RichTextBlockEditorProps> = ({
+  block,
+  onChange,
+}) => {
+  const updateData = (updates: Partial<RichTextBlock["data"]>) => {
     onChange({
       ...block,
       data: { ...block.data, ...updates },
@@ -28,7 +31,8 @@ export const RichTextBlockEditor: React.FC<RichTextBlockEditorProps> = ({ block,
           placeholder="<p>Enter HTML content here...</p>"
         />
         <p className="text-xs text-gray-500 mt-1">
-          You can use HTML tags. In a production environment, use a rich text editor.
+          You can use HTML tags. In a production environment, use a rich text
+          editor.
         </p>
       </div>
 
@@ -36,7 +40,7 @@ export const RichTextBlockEditor: React.FC<RichTextBlockEditorProps> = ({ block,
         <p className="text-sm text-blue-800">
           <strong>Preview:</strong>
         </p>
-        <div 
+        <div
           className="mt-2 prose prose-sm max-w-none"
           dangerouslySetInnerHTML={{ __html: block.data.content }}
         />

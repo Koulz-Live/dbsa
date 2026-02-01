@@ -197,6 +197,8 @@ router.delete("/users/:id/roles/:role", async (req: Request, res: Response) => {
 // GET /api/admin/stats - Get system statistics
 router.get("/stats", async (req: Request, res: Response) => {
   try {
+    console.log("📊 Stats endpoint called by user:", req.user);
+
     const [
       { count: totalUsers },
       { count: totalContent },
@@ -218,6 +220,8 @@ router.get("/stats", async (req: Request, res: Response) => {
         .eq("status", "Draft"),
       supabase.from("media_assets").select("*", { count: "exact", head: true }),
     ]);
+
+    console.log("✅ Stats retrieved successfully");
 
     res.json({
       users: totalUsers || 0,

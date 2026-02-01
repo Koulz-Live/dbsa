@@ -1,5 +1,5 @@
-import React from 'react';
-import { RichTextBlock } from '../types';
+import React from "react";
+import { RichTextBlock } from "../types";
 
 interface RichTextBlockComponentProps {
   block: RichTextBlock;
@@ -14,7 +14,7 @@ export const RichTextBlockComponent: React.FC<RichTextBlockComponentProps> = ({
 
   return (
     <div
-      className={`prose max-w-none p-6 ${isEditing ? 'border-2 border-blue-300' : ''}`}
+      className={`prose max-w-none p-6 ${isEditing ? "border-2 border-blue-300" : ""}`}
     >
       <div dangerouslySetInnerHTML={{ __html: content }} />
     </div>

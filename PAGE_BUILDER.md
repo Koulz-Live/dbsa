@@ -84,6 +84,7 @@ src/components/PageBuilder/
 **Purpose:** Large header section with background image and optional CTA
 
 **Data Structure:**
+
 ```typescript
 {
   title: string;
@@ -96,6 +97,7 @@ src/components/PageBuilder/
 ```
 
 **Configuration:**
+
 - Title (required)
 - Subtitle (optional)
 - Background image URL
@@ -103,6 +105,7 @@ src/components/PageBuilder/
 - CTA button text and URL
 
 **Use Cases:**
+
 - Page headers
 - Feature announcements
 - Landing page heroes
@@ -114,6 +117,7 @@ src/components/PageBuilder/
 **Purpose:** Formatted text content with HTML support
 
 **Data Structure:**
+
 ```typescript
 {
   content: string; // HTML
@@ -121,10 +125,12 @@ src/components/PageBuilder/
 ```
 
 **Configuration:**
+
 - HTML content editor
 - Live preview
 
 **Use Cases:**
+
 - Article content
 - Formatted text with headings, lists, links
 - Embedded content
@@ -138,6 +144,7 @@ src/components/PageBuilder/
 **Purpose:** Prominent call-to-action section
 
 **Data Structure:**
+
 ```typescript
 {
   title: string;
@@ -150,11 +157,13 @@ src/components/PageBuilder/
 ```
 
 **Configuration:**
+
 - Title and description
 - Button text and URL
 - Custom background and text colors
 
 **Use Cases:**
+
 - Newsletter signups
 - Product promotions
 - Contact forms
@@ -167,6 +176,7 @@ src/components/PageBuilder/
 **Purpose:** Grid of cards with images, titles, and descriptions
 
 **Data Structure:**
+
 ```typescript
 {
   title?: string;
@@ -182,12 +192,14 @@ src/components/PageBuilder/
 ```
 
 **Configuration:**
+
 - Section title (optional)
 - Column layout (2, 3, or 4 columns)
 - Add/remove/edit individual cards
 - Each card: title, description, image, link
 
 **Use Cases:**
+
 - Service offerings
 - Team members
 - Product features
@@ -201,6 +213,7 @@ src/components/PageBuilder/
 **Purpose:** Collection of images with different layout options
 
 **Data Structure:**
+
 ```typescript
 {
   title?: string;
@@ -215,12 +228,14 @@ src/components/PageBuilder/
 ```
 
 **Configuration:**
+
 - Gallery title (optional)
 - Layout style (grid, masonry, carousel)
 - Add/remove images
 - Each image: URL, alt text, caption
 
 **Use Cases:**
+
 - Photo galleries
 - Portfolio
 - Event photos
@@ -390,13 +405,13 @@ All blocks use **Tailwind CSS** classes:
 
 ```tsx
 // Hero block
-className="relative min-h-[400px] flex items-center justify-center p-8"
+className = "relative min-h-[400px] flex items-center justify-center p-8";
 
 // Cards grid
-className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6";
 
 // CTA section
-className="p-12 text-center"
+className = "p-12 text-center";
 ```
 
 ---
@@ -406,13 +421,16 @@ className="p-12 text-center"
 Each block type has a default template in `BLOCK_TEMPLATES`:
 
 ```typescript
-export const BLOCK_TEMPLATES: Record<BlockType, Omit<PageBlock, 'id' | 'order'>> = {
+export const BLOCK_TEMPLATES: Record<
+  BlockType,
+  Omit<PageBlock, "id" | "order">
+> = {
   hero: {
-    type: 'hero',
+    type: "hero",
     data: {
-      title: 'Hero Title',
-      subtitle: 'Hero subtitle text',
-      alignment: 'center',
+      title: "Hero Title",
+      subtitle: "Hero subtitle text",
+      alignment: "center",
     },
   },
   // ... other templates
@@ -487,6 +505,7 @@ These templates are used when adding new blocks to pre-fill sensible defaults.
 ### Manual Testing Steps
 
 1. **Create New Content**
+
    ```
    Navigate to /content/new
    Add title and required fields
@@ -494,12 +513,14 @@ These templates are used when adding new blocks to pre-fill sensible defaults.
    ```
 
 2. **Add All Block Types**
+
    ```
    Click each "+ Block" button
    Verify each block appears
    ```
 
 3. **Edit Each Block**
+
    ```
    Click "Edit" on each block
    Fill in all fields
@@ -507,6 +528,7 @@ These templates are used when adding new blocks to pre-fill sensible defaults.
    ```
 
 4. **Reorder Blocks**
+
    ```
    Drag blocks to different positions
    Use up/down buttons
@@ -514,6 +536,7 @@ These templates are used when adding new blocks to pre-fill sensible defaults.
    ```
 
 5. **Delete Blocks**
+
    ```
    Click delete icon
    Verify block is removed
@@ -608,6 +631,7 @@ Same payload structure. The backend automatically versions the content on update
 **Symptom:** Added block doesn't appear
 
 **Fix:**
+
 1. Check browser console for errors
 2. Verify block type is in `blockTypeLabels`
 3. Check if `renderBlock()` handles the type
@@ -617,6 +641,7 @@ Same payload structure. The backend automatically versions the content on update
 **Symptom:** Edit button doesn't show editor
 
 **Fix:**
+
 1. Check if `editingBlockId` state is updating
 2. Verify block ID exists in blocks array
 3. Check if `renderBlockEditor()` handles the type
@@ -626,6 +651,7 @@ Same payload structure. The backend automatically versions the content on update
 **Symptom:** Blocks disappear after save/reload
 
 **Fix:**
+
 1. Check network tab for API response
 2. Verify `convertFromPageBlocks()` is called
 3. Check backend handles `page_data` field
@@ -636,6 +662,7 @@ Same payload structure. The backend automatically versions the content on update
 **Symptom:** Can't reorder blocks
 
 **Fix:**
+
 1. Check `draggable` prop is set
 2. Verify drag handlers are attached
 3. Check browser console for errors

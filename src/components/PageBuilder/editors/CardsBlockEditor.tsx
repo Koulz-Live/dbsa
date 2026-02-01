@@ -1,13 +1,16 @@
-import React from 'react';
-import { CardsBlock, Card } from '../types';
+import React from "react";
+import { CardsBlock, Card } from "../types";
 
 interface CardsBlockEditorProps {
   block: CardsBlock;
   onChange: (block: CardsBlock) => void;
 }
 
-export const CardsBlockEditor: React.FC<CardsBlockEditorProps> = ({ block, onChange }) => {
-  const updateData = (updates: Partial<CardsBlock['data']>) => {
+export const CardsBlockEditor: React.FC<CardsBlockEditorProps> = ({
+  block,
+  onChange,
+}) => {
+  const updateData = (updates: Partial<CardsBlock["data"]>) => {
     onChange({
       ...block,
       data: { ...block.data, ...updates },
@@ -17,8 +20,8 @@ export const CardsBlockEditor: React.FC<CardsBlockEditorProps> = ({ block, onCha
   const addCard = () => {
     const newCard: Card = {
       id: Date.now().toString(),
-      title: 'New Card',
-      description: 'Card description',
+      title: "New Card",
+      description: "Card description",
     };
     updateData({ cards: [...block.data.cards, newCard] });
   };
@@ -30,7 +33,7 @@ export const CardsBlockEditor: React.FC<CardsBlockEditorProps> = ({ block, onCha
   const updateCard = (cardId: string, updates: Partial<Card>) => {
     updateData({
       cards: block.data.cards.map((c) =>
-        c.id === cardId ? { ...c, ...updates } : c
+        c.id === cardId ? { ...c, ...updates } : c,
       ),
     });
   };
@@ -43,7 +46,7 @@ export const CardsBlockEditor: React.FC<CardsBlockEditorProps> = ({ block, onCha
         </label>
         <input
           type="text"
-          value={block.data.title || ''}
+          value={block.data.title || ""}
           onChange={(e) => updateData({ title: e.target.value })}
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
           placeholder="Cards Section Title"
@@ -56,7 +59,9 @@ export const CardsBlockEditor: React.FC<CardsBlockEditorProps> = ({ block, onCha
         </label>
         <select
           value={block.data.columns}
-          onChange={(e) => updateData({ columns: parseInt(e.target.value) as 2 | 3 | 4 })}
+          onChange={(e) =>
+            updateData({ columns: parseInt(e.target.value) as 2 | 3 | 4 })
+          }
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
         >
           <option value={2}>2 columns</option>
@@ -79,9 +84,14 @@ export const CardsBlockEditor: React.FC<CardsBlockEditorProps> = ({ block, onCha
 
         <div className="space-y-4">
           {block.data.cards.map((card, index) => (
-            <div key={card.id} className="border border-gray-200 rounded-md p-4 bg-gray-50">
+            <div
+              key={card.id}
+              className="border border-gray-200 rounded-md p-4 bg-gray-50"
+            >
               <div className="flex items-center justify-between mb-3">
-                <span className="text-sm font-medium text-gray-700">Card {index + 1}</span>
+                <span className="text-sm font-medium text-gray-700">
+                  Card {index + 1}
+                </span>
                 <button
                   type="button"
                   onClick={() => removeCard(card.id)}
@@ -99,7 +109,9 @@ export const CardsBlockEditor: React.FC<CardsBlockEditorProps> = ({ block, onCha
                   <input
                     type="text"
                     value={card.title}
-                    onChange={(e) => updateCard(card.id, { title: e.target.value })}
+                    onChange={(e) =>
+                      updateCard(card.id, { title: e.target.value })
+                    }
                     className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                   />
                 </div>
@@ -110,7 +122,9 @@ export const CardsBlockEditor: React.FC<CardsBlockEditorProps> = ({ block, onCha
                   </label>
                   <textarea
                     value={card.description}
-                    onChange={(e) => updateCard(card.id, { description: e.target.value })}
+                    onChange={(e) =>
+                      updateCard(card.id, { description: e.target.value })
+                    }
                     rows={2}
                     className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                   />
@@ -122,8 +136,10 @@ export const CardsBlockEditor: React.FC<CardsBlockEditorProps> = ({ block, onCha
                   </label>
                   <input
                     type="text"
-                    value={card.image || ''}
-                    onChange={(e) => updateCard(card.id, { image: e.target.value })}
+                    value={card.image || ""}
+                    onChange={(e) =>
+                      updateCard(card.id, { image: e.target.value })
+                    }
                     className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                     placeholder="https://example.com/image.jpg"
                   />
@@ -135,8 +151,10 @@ export const CardsBlockEditor: React.FC<CardsBlockEditorProps> = ({ block, onCha
                   </label>
                   <input
                     type="text"
-                    value={card.link || ''}
-                    onChange={(e) => updateCard(card.id, { link: e.target.value })}
+                    value={card.link || ""}
+                    onChange={(e) =>
+                      updateCard(card.id, { link: e.target.value })
+                    }
                     className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                     placeholder="https://example.com"
                   />

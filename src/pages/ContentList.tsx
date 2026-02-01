@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { apiClient } from "../lib/apiClient";
 import { ContentItem, ContentStatus } from "../../shared/types";
+import { TableSkeleton, EmptyState, ErrorState } from "../components/Loading";
 
 interface ContentListResponse {
   data: ContentItem[];
@@ -100,10 +101,32 @@ export function ContentList() {
 
   if (loading && content.length === 0) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading content...</p>
+      <div className="min-h-screen bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900">
+              Content Management
+            </h1>
+            <p className="mt-2 text-gray-600">
+              Manage all your content items across the CMS
+            </p>
+          </div>
+          <TableSkeleton rows={10} />
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900">
+              Content Management
+            </h1>
+          </div>
+          <ErrorState message={error} retry={fetchContent} />
         </div>
       </div>
     );
@@ -218,27 +241,34 @@ export function ContentList() {
             <tbody className="bg-white divide-y divide-gray-200">
               {content.length === 0 ? (
                 <tr>
-                  <td
-                    colSpan={5}
-                    className="px-6 py-12 text-center text-gray-500"
-                  >
-                    <svg
-                      className="mx-auto h-12 w-12 text-gray-400"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                      />
-                    </svg>
-                    <p className="mt-4 text-lg font-medium">No content found</p>
-                    <p className="mt-1 text-sm">
-                      Get started by creating new content.
-                    </p>
+                  <td colSpan={5} className="px-6 py-12">
+                    <EmptyState
+                      icon={
+                        <svg
+                          className="h-12 w-12"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                          />
+                        </svg>
+                      }
+                      title="No content found"
+                      description="Get started by creating new content items or adjust your filters."
+                      action={
+                        <a
+                          href="/content/new"
+                          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                        >
+                          Create Content
+                        </a>
+                      }
+                    />
                   </td>
                 </tr>
               ) : (

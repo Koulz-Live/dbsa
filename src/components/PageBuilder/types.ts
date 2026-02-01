@@ -3,7 +3,7 @@
  * Defines the structure for all page builder blocks
  */
 
-export type BlockType = 'hero' | 'richtext' | 'cta' | 'cards' | 'image-gallery';
+export type BlockType = "hero" | "richtext" | "cta" | "cards" | "image-gallery";
 
 export interface BaseBlock {
   id: string;
@@ -12,26 +12,26 @@ export interface BaseBlock {
 }
 
 export interface HeroBlock extends BaseBlock {
-  type: 'hero';
+  type: "hero";
   data: {
     title: string;
     subtitle?: string;
     backgroundImage?: string;
     ctaText?: string;
     ctaUrl?: string;
-    alignment: 'left' | 'center' | 'right';
+    alignment: "left" | "center" | "right";
   };
 }
 
 export interface RichTextBlock extends BaseBlock {
-  type: 'richtext';
+  type: "richtext";
   data: {
     content: string; // HTML content
   };
 }
 
 export interface CTABlock extends BaseBlock {
-  type: 'cta';
+  type: "cta";
   data: {
     title: string;
     description?: string;
@@ -51,7 +51,7 @@ export interface Card {
 }
 
 export interface CardsBlock extends BaseBlock {
-  type: 'cards';
+  type: "cards";
   data: {
     title?: string;
     cards: Card[];
@@ -60,7 +60,7 @@ export interface CardsBlock extends BaseBlock {
 }
 
 export interface ImageGalleryBlock extends BaseBlock {
-  type: 'image-gallery';
+  type: "image-gallery";
   data: {
     title?: string;
     images: {
@@ -69,7 +69,7 @@ export interface ImageGalleryBlock extends BaseBlock {
       alt: string;
       caption?: string;
     }[];
-    layout: 'grid' | 'masonry' | 'carousel';
+    layout: "grid" | "masonry" | "carousel";
   };
 }
 
@@ -85,59 +85,62 @@ export interface PageBuilderData {
 }
 
 // Block templates for initialization
-export const BLOCK_TEMPLATES: Record<BlockType, Omit<PageBlock, 'id' | 'order'>> = {
+export const BLOCK_TEMPLATES: Record<
+  BlockType,
+  Omit<PageBlock, "id" | "order">
+> = {
   hero: {
-    type: 'hero',
+    type: "hero",
     data: {
-      title: 'Hero Title',
-      subtitle: 'Hero subtitle text',
-      alignment: 'center',
+      title: "Hero Title",
+      subtitle: "Hero subtitle text",
+      alignment: "center",
     },
   },
   richtext: {
-    type: 'richtext',
+    type: "richtext",
     data: {
-      content: '<p>Enter your content here...</p>',
+      content: "<p>Enter your content here...</p>",
     },
   },
   cta: {
-    type: 'cta',
+    type: "cta",
     data: {
-      title: 'Call to Action',
-      description: 'Compelling description',
-      buttonText: 'Learn More',
-      buttonUrl: '#',
+      title: "Call to Action",
+      description: "Compelling description",
+      buttonText: "Learn More",
+      buttonUrl: "#",
     },
   },
   cards: {
-    type: 'cards',
+    type: "cards",
     data: {
-      title: 'Cards Section',
+      title: "Cards Section",
       columns: 3,
       cards: [
         {
-          id: '1',
-          title: 'Card 1',
-          description: 'Card description',
+          id: "1",
+          title: "Card 1",
+          description: "Card description",
         },
         {
-          id: '2',
-          title: 'Card 2',
-          description: 'Card description',
+          id: "2",
+          title: "Card 2",
+          description: "Card description",
         },
         {
-          id: '3',
-          title: 'Card 3',
-          description: 'Card description',
+          id: "3",
+          title: "Card 3",
+          description: "Card description",
         },
       ],
     },
   },
-  'image-gallery': {
-    type: 'image-gallery',
+  "image-gallery": {
+    type: "image-gallery",
     data: {
-      title: 'Image Gallery',
-      layout: 'grid',
+      title: "Image Gallery",
+      layout: "grid",
       images: [],
     },
   },

@@ -110,10 +110,7 @@ export function ContentEditor() {
         await apiClient.patch(`/content/${id}`, payload);
         alert("Content updated successfully!");
       } else {
-        const response = await apiClient.post<ContentItem>(
-          "/content",
-          payload,
-        );
+        const response = await apiClient.post<ContentItem>("/content", payload);
         alert("Content created successfully!");
         navigate(`/content/${response.data.id}`);
       }

@@ -1,13 +1,16 @@
-import React from 'react';
-import { HeroBlock } from '../types';
+import React from "react";
+import { HeroBlock } from "../types";
 
 interface HeroBlockEditorProps {
   block: HeroBlock;
   onChange: (block: HeroBlock) => void;
 }
 
-export const HeroBlockEditor: React.FC<HeroBlockEditorProps> = ({ block, onChange }) => {
-  const updateData = (updates: Partial<HeroBlock['data']>) => {
+export const HeroBlockEditor: React.FC<HeroBlockEditorProps> = ({
+  block,
+  onChange,
+}) => {
+  const updateData = (updates: Partial<HeroBlock["data"]>) => {
     onChange({
       ...block,
       data: { ...block.data, ...updates },
@@ -35,7 +38,7 @@ export const HeroBlockEditor: React.FC<HeroBlockEditorProps> = ({ block, onChang
         </label>
         <input
           type="text"
-          value={block.data.subtitle || ''}
+          value={block.data.subtitle || ""}
           onChange={(e) => updateData({ subtitle: e.target.value })}
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
           placeholder="Enter hero subtitle"
@@ -48,7 +51,7 @@ export const HeroBlockEditor: React.FC<HeroBlockEditorProps> = ({ block, onChang
         </label>
         <input
           type="text"
-          value={block.data.backgroundImage || ''}
+          value={block.data.backgroundImage || ""}
           onChange={(e) => updateData({ backgroundImage: e.target.value })}
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
           placeholder="https://example.com/image.jpg"
@@ -61,7 +64,11 @@ export const HeroBlockEditor: React.FC<HeroBlockEditorProps> = ({ block, onChang
         </label>
         <select
           value={block.data.alignment}
-          onChange={(e) => updateData({ alignment: e.target.value as 'left' | 'center' | 'right' })}
+          onChange={(e) =>
+            updateData({
+              alignment: e.target.value as "left" | "center" | "right",
+            })
+          }
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
         >
           <option value="left">Left</option>
@@ -71,8 +78,10 @@ export const HeroBlockEditor: React.FC<HeroBlockEditorProps> = ({ block, onChang
       </div>
 
       <div className="border-t pt-4">
-        <h4 className="font-medium text-gray-900 mb-3">Call to Action (Optional)</h4>
-        
+        <h4 className="font-medium text-gray-900 mb-3">
+          Call to Action (Optional)
+        </h4>
+
         <div className="space-y-3">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -80,7 +89,7 @@ export const HeroBlockEditor: React.FC<HeroBlockEditorProps> = ({ block, onChang
             </label>
             <input
               type="text"
-              value={block.data.ctaText || ''}
+              value={block.data.ctaText || ""}
               onChange={(e) => updateData({ ctaText: e.target.value })}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               placeholder="Learn More"
@@ -93,7 +102,7 @@ export const HeroBlockEditor: React.FC<HeroBlockEditorProps> = ({ block, onChang
             </label>
             <input
               type="text"
-              value={block.data.ctaUrl || ''}
+              value={block.data.ctaUrl || ""}
               onChange={(e) => updateData({ ctaUrl: e.target.value })}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               placeholder="https://example.com"

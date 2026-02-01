@@ -1,5 +1,6 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { supabase } from "./supabase";
+import { getCsrfTokenFromCookie } from "./csrf";
 
 // Base URL from environment variable
 const baseURL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3001";
@@ -11,17 +12,31 @@ export const apiClient = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true, // Important: send cookies with requests
 });
 
-// Request interceptor: attach Supabase access token
+// Request interceptor: attach Supabase access token + CSRF token
 apiClient.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
+    // Attach Supabase authentication token
     const {
       data: { session },
     } = await supabase.auth.getSession();
 
     if (session?.access_token) {
       config.headers.Authorization = `Bearer ${session.access_token}`;
+    }
+
+    // Attach CSRF token for state-changing requests
+    if (
+      ["POST", "PUT", "PATCH", "DELETE"].includes(
+        config.method?.toUpperCase() || "",
+      )
+    ) {
+      const csrfToken = getCsrfTokenFromCookie();
+      if (csrfToken) {
+        config.headers["x-csrf-token"] = csrfToken;
+      }
     }
 
     return config;

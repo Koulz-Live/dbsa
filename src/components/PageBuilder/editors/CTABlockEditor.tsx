@@ -1,13 +1,16 @@
-import React from 'react';
-import { CTABlock } from '../types';
+import React from "react";
+import { CTABlock } from "../types";
 
 interface CTABlockEditorProps {
   block: CTABlock;
   onChange: (block: CTABlock) => void;
 }
 
-export const CTABlockEditor: React.FC<CTABlockEditorProps> = ({ block, onChange }) => {
-  const updateData = (updates: Partial<CTABlock['data']>) => {
+export const CTABlockEditor: React.FC<CTABlockEditorProps> = ({
+  block,
+  onChange,
+}) => {
+  const updateData = (updates: Partial<CTABlock["data"]>) => {
     onChange({
       ...block,
       data: { ...block.data, ...updates },
@@ -34,7 +37,7 @@ export const CTABlockEditor: React.FC<CTABlockEditorProps> = ({ block, onChange 
           Description
         </label>
         <textarea
-          value={block.data.description || ''}
+          value={block.data.description || ""}
           onChange={(e) => updateData({ description: e.target.value })}
           rows={3}
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
@@ -72,7 +75,7 @@ export const CTABlockEditor: React.FC<CTABlockEditorProps> = ({ block, onChange 
 
       <div className="border-t pt-4">
         <h4 className="font-medium text-gray-900 mb-3">Styling</h4>
-        
+
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -80,7 +83,7 @@ export const CTABlockEditor: React.FC<CTABlockEditorProps> = ({ block, onChange 
             </label>
             <input
               type="color"
-              value={block.data.backgroundColor || '#3b82f6'}
+              value={block.data.backgroundColor || "#3b82f6"}
               onChange={(e) => updateData({ backgroundColor: e.target.value })}
               className="w-full h-10 px-1 py-1 border border-gray-300 rounded-md"
             />
@@ -92,7 +95,7 @@ export const CTABlockEditor: React.FC<CTABlockEditorProps> = ({ block, onChange 
             </label>
             <input
               type="color"
-              value={block.data.textColor || '#ffffff'}
+              value={block.data.textColor || "#ffffff"}
               onChange={(e) => updateData({ textColor: e.target.value })}
               className="w-full h-10 px-1 py-1 border border-gray-300 rounded-md"
             />

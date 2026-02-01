@@ -1,26 +1,31 @@
-import React from 'react';
-import { CardsBlock } from '../types';
+import React from "react";
+import { CardsBlock } from "../types";
 
 interface CardsBlockComponentProps {
   block: CardsBlock;
   isEditing?: boolean;
 }
 
-export const CardsBlockComponent: React.FC<CardsBlockComponentProps> = ({ block, isEditing }) => {
+export const CardsBlockComponent: React.FC<CardsBlockComponentProps> = ({
+  block,
+  isEditing,
+}) => {
   const { title, cards, columns } = block.data;
 
   const gridCols = {
-    2: 'grid-cols-1 md:grid-cols-2',
-    3: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
-    4: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4',
+    2: "grid-cols-1 md:grid-cols-2",
+    3: "grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
+    4: "grid-cols-1 md:grid-cols-2 lg:grid-cols-4",
   }[columns];
 
   return (
-    <div className={`p-8 ${isEditing ? 'border-2 border-blue-300' : ''}`}>
+    <div className={`p-8 ${isEditing ? "border-2 border-blue-300" : ""}`}>
       {title && (
-        <h2 className="text-3xl font-bold text-center mb-8 text-gray-900">{title}</h2>
+        <h2 className="text-3xl font-bold text-center mb-8 text-gray-900">
+          {title}
+        </h2>
       )}
-      
+
       <div className={`grid ${gridCols} gap-6 max-w-7xl mx-auto`}>
         {cards.map((card) => (
           <div
@@ -34,11 +39,13 @@ export const CardsBlockComponent: React.FC<CardsBlockComponentProps> = ({ block,
                 className="w-full h-48 object-cover"
               />
             )}
-            
+
             <div className="p-6">
-              <h3 className="text-xl font-semibold mb-2 text-gray-900">{card.title}</h3>
+              <h3 className="text-xl font-semibold mb-2 text-gray-900">
+                {card.title}
+              </h3>
               <p className="text-gray-600 mb-4">{card.description}</p>
-              
+
               {card.link && (
                 <a
                   href={card.link}

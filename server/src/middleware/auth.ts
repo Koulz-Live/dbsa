@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import { verify } from "jsonwebtoken";
 import { config } from "../config";
 import { createClient } from "@supabase/supabase-js";
 
@@ -39,32 +38,48 @@ export const authMiddleware = async (
 
     const token = authHeader.substring(7);
 
-    // Verify JWT with Supabase secret
-    const decoded = verify(token, config.supabase.jwtSecret) as {
-      sub: string;
-      email: string;
-    };
+    console.log("🔐 AUTH MIDDLEWARE - Using Supabase getUser");
 
-    // Get user data from Supabase (optional: fetch role from custom claims or user_roles table)
-    const { data: user, error } = await supabase.auth.admin.getUserById(
-      decoded.sub,
-    );
+    // Use Supabase to verify the token (it handles JWT verification internally)
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser(token);
 
-    if (error || !user) {
+    if (authError || !user) {
+      console.log("❌ Auth error:", authError?.message);
       res.status(401).json({
         code: "UNAUTHORIZED",
-        message: "Invalid token or user not found",
+        message: "Invalid or expired token",
       });
       return;
     }
 
+    console.log("✅ User authenticated:", user.id, user.email);
+
+    // Fetch user role from user_roles table
+    const { data: userRoles, error: roleError } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", user.id)
+      .single();
+
+    console.log("🔍 Auth Debug:", {
+      userId: user.id,
+      email: user.email,
+      roleFromDb: userRoles?.role,
+      roleError: roleError?.message,
+      metadata: user.user_metadata,
+    });
+
     // Attach user to request
     req.user = {
-      id: user.user.id,
-      email: user.user.email || "",
-      // role can be fetched from user_metadata or a separate user_roles table
-      role: user.user.user_metadata?.role,
+      id: user.id,
+      email: user.email || "",
+      role: userRoles?.role || user.user_metadata?.role,
     };
+
+    console.log("✅ User attached to request:", req.user);
 
     next();
   } catch (error) {
