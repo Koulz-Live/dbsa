@@ -1,5 +1,18 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Form,
+  Button,
+  Badge,
+  Alert,
+  Spinner,
+  InputGroup,
+} from "react-bootstrap";
+import { Navigation } from "../components/Navigation";
 import { apiClient } from "../lib/apiClient";
 import { ContentItem, ContentStatus, Block } from "../../shared/types";
 import { PageBuilder, PageBlock } from "../components/PageBuilder";
@@ -10,7 +23,7 @@ const convertToPageBlocks = (blocks: Block[] | undefined): PageBlock[] => {
   return blocks.map((block, index) => ({
     ...block,
     order: index,
-    type: block.type.toLowerCase() as any, // Convert "Hero" -> "hero", etc.
+    type: block.type.toLowerCase() as PageBlock["type"], // Convert "Hero" -> "hero", etc.
   })) as PageBlock[];
 };
 
@@ -18,7 +31,8 @@ const convertToPageBlocks = (blocks: Block[] | undefined): PageBlock[] => {
 const convertFromPageBlocks = (blocks: PageBlock[]): Block[] => {
   return blocks.map((block) => ({
     id: block.id,
-    type: (block.type.charAt(0).toUpperCase() + block.type.slice(1)) as any,
+    type: (block.type.charAt(0).toUpperCase() +
+      block.type.slice(1)) as Block["type"],
     data: block.data as Record<string, unknown>,
   }));
 };
@@ -114,8 +128,9 @@ export function ContentEditor() {
         alert("Content created successfully!");
         navigate(`/content/${response.data.id}`);
       }
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Failed to save content");
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setError(error.response?.data?.message || "Failed to save content");
     } finally {
       setSaving(false);
     }
@@ -146,21 +161,20 @@ export function ContentEditor() {
     setFormData({ ...formData, slug });
   };
 
-  const getStatusBadgeClass = (status: ContentStatus) => {
-    const baseClasses = "px-3 py-1 text-sm font-semibold rounded-full";
+  const getStatusBadgeVariant = (status: ContentStatus) => {
     switch (status) {
       case "Draft":
-        return `${baseClasses} bg-gray-200 text-gray-800`;
+        return "secondary";
       case "InReview":
-        return `${baseClasses} bg-blue-200 text-blue-800`;
+        return "warning";
       case "Approved":
-        return `${baseClasses} bg-green-200 text-green-800`;
+        return "success";
       case "Published":
-        return `${baseClasses} bg-purple-200 text-purple-800`;
+        return "primary";
       case "Unpublished":
-        return `${baseClasses} bg-orange-200 text-orange-800`;
+        return "danger";
       default:
-        return baseClasses;
+        return "secondary";
     }
   };
 
@@ -170,394 +184,399 @@ export function ContentEditor() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading content...</p>
-        </div>
-      </div>
+      <>
+        <Navigation />
+        <Container className="py-5">
+          <div className="text-center">
+            <Spinner animation="border" variant="primary" className="mb-3" />
+            <p className="text-muted">Loading content...</p>
+          </div>
+        </Container>
+      </>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-8 flex items-center justify-between">
-          <div>
-            <button
-              onClick={() => navigate("/content")}
-              className="text-blue-600 hover:text-blue-800 mb-2 flex items-center gap-1"
-            >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+    <>
+      <Navigation />
+      <div className="min-vh-100 bg-light">
+        <Container className="py-4">
+          {/* Header */}
+          <Row className="mb-4">
+            <Col>
+              <Button
+                variant="link"
+                onClick={() => navigate("/content")}
+                className="text-decoration-none p-0 mb-2"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-              Back to Content List
-            </button>
-            <h1 className="text-3xl font-bold text-gray-900">
-              {isEditMode ? "Edit Content" : "Create New Content"}
-            </h1>
-            {content && (
-              <div className="mt-2 flex items-center gap-3">
-                <span className={getStatusBadgeClass(content.status)}>
-                  {getStatusLabel(content.status)}
-                </span>
-                <span className="text-sm text-gray-500">
-                  Last updated: {new Date(content.updated_at).toLocaleString()}
-                </span>
-              </div>
-            )}
-          </div>
-        </div>
+                <i className="bi bi-arrow-left me-1"></i>
+                Back to Content List
+              </Button>
+              <h1 className="h2 mb-2">
+                {isEditMode ? "Edit Content" : "Create New Content"}
+              </h1>
+              {content && (
+                <div className="d-flex align-items-center gap-3">
+                  <Badge bg={getStatusBadgeVariant(content.status)}>
+                    {getStatusLabel(content.status)}
+                  </Badge>
+                  <small className="text-muted">
+                    Last updated:{" "}
+                    {new Date(content.updated_at).toLocaleString()}
+                  </small>
+                </div>
+              )}
+            </Col>
+          </Row>
 
-        {/* Error Message */}
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-800 rounded-lg p-4 mb-6">
-            <p className="font-semibold">Error</p>
-            <p className="text-sm">{error}</p>
-          </div>
-        )}
+          {/* Error Alert */}
+          {error && (
+            <Alert
+              variant="danger"
+              dismissible
+              onClose={() => setError(null)}
+              className="mb-4"
+            >
+              <Alert.Heading>Error</Alert.Heading>
+              <p className="mb-0">{error}</p>
+            </Alert>
+          )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Main Form */}
-          <div className="lg:col-span-2 space-y-6">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Basic Information */}
-              <div className="bg-white rounded-lg shadow p-6">
-                <h2 className="text-xl font-semibold mb-4">
-                  Basic Information
-                </h2>
+          <Row>
+            {/* Main Form */}
+            <Col lg={8}>
+              <Form onSubmit={handleSubmit}>
+                {/* Basic Information */}
+                <Card className="mb-4">
+                  <Card.Body>
+                    <h5 className="card-title mb-4">Basic Information</h5>
 
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Title *
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.title}
-                      onChange={(e) =>
-                        setFormData({ ...formData, title: e.target.value })
-                      }
-                      required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="Enter content title"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Slug *
-                    </label>
-                    <div className="flex gap-2">
-                      <input
+                    <Form.Group className="mb-3">
+                      <Form.Label>
+                        Title <span className="text-danger">*</span>
+                      </Form.Label>
+                      <Form.Control
                         type="text"
-                        value={formData.slug}
+                        value={formData.title}
                         onChange={(e) =>
-                          setFormData({ ...formData, slug: e.target.value })
+                          setFormData({ ...formData, title: e.target.value })
                         }
                         required
-                        className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="content-url-slug"
+                        placeholder="Enter content title"
                       />
-                      <button
-                        type="button"
-                        onClick={generateSlug}
-                        className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
-                      >
-                        Generate
-                      </button>
-                    </div>
-                    <p className="text-xs text-gray-500 mt-1">
-                      URL-friendly version of the title
-                    </p>
-                  </div>
+                    </Form.Group>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Excerpt
-                    </label>
-                    <textarea
-                      value={formData.excerpt}
-                      onChange={(e) =>
-                        setFormData({ ...formData, excerpt: e.target.value })
-                      }
-                      rows={3}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="Brief description of the content"
-                    />
-                  </div>
+                    <Form.Group className="mb-3">
+                      <Form.Label>
+                        Slug <span className="text-danger">*</span>
+                      </Form.Label>
+                      <InputGroup>
+                        <Form.Control
+                          type="text"
+                          value={formData.slug}
+                          onChange={(e) =>
+                            setFormData({ ...formData, slug: e.target.value })
+                          }
+                          required
+                          placeholder="content-url-slug"
+                        />
+                        <Button
+                          variant="outline-secondary"
+                          onClick={generateSlug}
+                        >
+                          Generate
+                        </Button>
+                      </InputGroup>
+                      <Form.Text className="text-muted">
+                        URL-friendly version of the title
+                      </Form.Text>
+                    </Form.Group>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Content Type *
-                      </label>
-                      <select
-                        value={formData.content_type_id}
+                    <Form.Group className="mb-3">
+                      <Form.Label>Excerpt</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        rows={3}
+                        value={formData.excerpt}
+                        onChange={(e) =>
+                          setFormData({ ...formData, excerpt: e.target.value })
+                        }
+                        placeholder="Brief description of the content"
+                      />
+                    </Form.Group>
+
+                    <Row>
+                      <Col md={6}>
+                        <Form.Group className="mb-3">
+                          <Form.Label>
+                            Content Type <span className="text-danger">*</span>
+                          </Form.Label>
+                          <Form.Select
+                            value={formData.content_type_id}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                content_type_id: e.target.value,
+                              })
+                            }
+                            required
+                          >
+                            <option value="">Select type...</option>
+                            <option value="page">Page</option>
+                            <option value="article">Article</option>
+                            <option value="news">News</option>
+                            <option value="event">Event</option>
+                          </Form.Select>
+                        </Form.Group>
+                      </Col>
+
+                      <Col md={6}>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Department</Form.Label>
+                          <Form.Select
+                            value={formData.department_id}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                department_id: e.target.value,
+                              })
+                            }
+                          >
+                            <option value="">Select department...</option>
+                            <option value="dept1">Marketing</option>
+                            <option value="dept2">Communications</option>
+                            <option value="dept3">Operations</option>
+                          </Form.Select>
+                        </Form.Group>
+                      </Col>
+                    </Row>
+                  </Card.Body>
+                </Card>
+
+                {/* SEO Settings */}
+                <Card className="mb-4">
+                  <Card.Body>
+                    <h5 className="card-title mb-4">SEO Settings</h5>
+
+                    <Form.Group className="mb-3">
+                      <Form.Label>Meta Title</Form.Label>
+                      <Form.Control
+                        type="text"
+                        value={formData.meta_title}
                         onChange={(e) =>
                           setFormData({
                             ...formData,
-                            content_type_id: e.target.value,
+                            meta_title: e.target.value,
                           })
                         }
-                        required
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-                      >
-                        <option value="">Select type...</option>
-                        <option value="page">Page</option>
-                        <option value="article">Article</option>
-                        <option value="news">News</option>
-                        <option value="event">Event</option>
-                      </select>
-                    </div>
+                        placeholder="SEO title (defaults to main title)"
+                      />
+                    </Form.Group>
 
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Department
-                      </label>
-                      <select
-                        value={formData.department_id}
+                    <Form.Group className="mb-3">
+                      <Form.Label>Meta Description</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        rows={2}
+                        value={formData.meta_description}
                         onChange={(e) =>
                           setFormData({
                             ...formData,
-                            department_id: e.target.value,
+                            meta_description: e.target.value,
                           })
                         }
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-                      >
-                        <option value="">Select department...</option>
-                        <option value="dept1">Marketing</option>
-                        <option value="dept2">Communications</option>
-                        <option value="dept3">Operations</option>
-                      </select>
+                        placeholder="Description for search engines"
+                      />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3">
+                      <Form.Label>Hero Image URL</Form.Label>
+                      <Form.Control
+                        type="url"
+                        value={formData.hero_image_url}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            hero_image_url: e.target.value,
+                          })
+                        }
+                        placeholder="https://example.com/image.jpg"
+                      />
+                    </Form.Group>
+                  </Card.Body>
+                </Card>
+
+                {/* Page Builder */}
+                <Card className="mb-4">
+                  <Card.Body>
+                    <h5 className="card-title mb-4">Page Content</h5>
+                    <PageBuilder
+                      blocks={formData.page_blocks}
+                      onChange={(blocks) =>
+                        setFormData({ ...formData, page_blocks: blocks })
+                      }
+                    />
+                  </Card.Body>
+                </Card>
+
+                {/* Form Actions */}
+                <div className="d-flex gap-2 mb-4">
+                  <Button type="submit" variant="primary" disabled={saving}>
+                    {saving ? (
+                      <>
+                        <Spinner
+                          animation="border"
+                          size="sm"
+                          className="me-2"
+                        />
+                        Saving...
+                      </>
+                    ) : isEditMode ? (
+                      "Update Content"
+                    ) : (
+                      "Create Content"
+                    )}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={() => navigate("/content")}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </Form>
+            </Col>
+
+            {/* Sidebar */}
+            <Col lg={4}>
+              {/* Workflow Actions */}
+              {content && (
+                <Card className="mb-4">
+                  <Card.Body>
+                    <h5 className="card-title mb-3">Workflow Actions</h5>
+                    <div className="d-grid gap-2">
+                      {content.status === "Draft" && (
+                        <Button
+                          onClick={() => handleWorkflowAction("submit")}
+                          disabled={saving}
+                          variant="primary"
+                        >
+                          Submit for Review
+                        </Button>
+                      )}
+
+                      {content.status === "InReview" && (
+                        <>
+                          <Button
+                            onClick={() => handleWorkflowAction("approve")}
+                            disabled={saving}
+                            variant="success"
+                          >
+                            Approve Content
+                          </Button>
+                          <Button
+                            onClick={() =>
+                              handleWorkflowAction("request-changes")
+                            }
+                            disabled={saving}
+                            variant="warning"
+                          >
+                            Request Changes
+                          </Button>
+                        </>
+                      )}
+
+                      {content.status === "Approved" && (
+                        <>
+                          <Button
+                            onClick={() => handleWorkflowAction("publish")}
+                            disabled={saving}
+                            variant="success"
+                          >
+                            Publish Now
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              /* Schedule modal */
+                            }}
+                            disabled={saving}
+                            variant="info"
+                          >
+                            Schedule Publishing
+                          </Button>
+                        </>
+                      )}
+
+                      {content.status === "Published" && (
+                        <Button
+                          onClick={() => handleWorkflowAction("unpublish")}
+                          disabled={saving}
+                          variant="danger"
+                        >
+                          Unpublish Content
+                        </Button>
+                      )}
                     </div>
-                  </div>
-                </div>
-              </div>
+                  </Card.Body>
+                </Card>
+              )}
 
-              {/* SEO Settings */}
-              <div className="bg-white rounded-lg shadow p-6">
-                <h2 className="text-xl font-semibold mb-4">SEO Settings</h2>
-
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Meta Title
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.meta_title}
-                      onChange={(e) =>
-                        setFormData({ ...formData, meta_title: e.target.value })
-                      }
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="SEO title (defaults to main title)"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Meta Description
-                    </label>
-                    <textarea
-                      value={formData.meta_description}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          meta_description: e.target.value,
-                        })
-                      }
-                      rows={2}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="Description for search engines"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Hero Image URL
-                    </label>
-                    <input
-                      type="url"
-                      value={formData.hero_image_url}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          hero_image_url: e.target.value,
-                        })
-                      }
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="https://example.com/image.jpg"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Page Builder */}
-              <div className="bg-white rounded-lg shadow p-6">
-                <h2 className="text-xl font-semibold mb-4">Page Content</h2>
-                <PageBuilder
-                  blocks={formData.page_blocks}
-                  onChange={(blocks) =>
-                    setFormData({ ...formData, page_blocks: blocks })
-                  }
-                />
-              </div>
-
-              {/* Form Actions */}
-              <div className="flex gap-3">
-                <button
-                  type="submit"
-                  disabled={saving}
-                  className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {saving
-                    ? "Saving..."
-                    : isEditMode
-                      ? "Update Content"
-                      : "Create Content"}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => navigate("/content")}
-                  className="px-6 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Workflow Actions */}
-            {content && (
-              <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-lg font-semibold mb-4">Workflow Actions</h3>
-                <div className="space-y-2">
-                  {content.status === "Draft" && (
-                    <button
-                      onClick={() => handleWorkflowAction("submit")}
-                      disabled={saving}
-                      className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
-                    >
-                      Submit for Review
-                    </button>
-                  )}
-
-                  {content.status === "InReview" && (
-                    <>
-                      <button
-                        onClick={() => handleWorkflowAction("approve")}
-                        disabled={saving}
-                        className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50"
-                      >
-                        Approve Content
-                      </button>
-                      <button
-                        onClick={() => handleWorkflowAction("request-changes")}
-                        disabled={saving}
-                        className="w-full px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 disabled:opacity-50"
-                      >
-                        Request Changes
-                      </button>
-                    </>
-                  )}
-
-                  {content.status === "Approved" && (
-                    <>
-                      <button
-                        onClick={() => handleWorkflowAction("publish")}
-                        disabled={saving}
-                        className="w-full px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50"
-                      >
-                        Publish Now
-                      </button>
-                      <button
-                        onClick={() => {
-                          /* Schedule modal */
-                        }}
-                        disabled={saving}
-                        className="w-full px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50"
-                      >
-                        Schedule Publishing
-                      </button>
-                    </>
-                  )}
-
-                  {content.status === "Published" && (
-                    <button
-                      onClick={() => handleWorkflowAction("unpublish")}
-                      disabled={saving}
-                      className="w-full px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50"
-                    >
-                      Unpublish Content
-                    </button>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Quick Info */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-semibold mb-4">Quick Info</h3>
-              <dl className="space-y-2 text-sm">
-                {content && (
-                  <>
-                    <div>
-                      <dt className="text-gray-500">Created</dt>
-                      <dd className="font-medium">
+              {/* Quick Info */}
+              <Card className="mb-4">
+                <Card.Body>
+                  <h5 className="card-title mb-3">Quick Info</h5>
+                  {content ? (
+                    <dl className="mb-0">
+                      <dt className="text-muted small">Created</dt>
+                      <dd className="mb-2">
                         {new Date(content.created_at).toLocaleDateString()}
                       </dd>
-                    </div>
-                    <div>
-                      <dt className="text-gray-500">Author</dt>
-                      <dd className="font-medium">
+                      <dt className="text-muted small">Author</dt>
+                      <dd className="mb-2 font-monospace small">
                         {content.author_id.substring(0, 8)}...
                       </dd>
-                    </div>
-                    {content.publish_at && (
-                      <div>
-                        <dt className="text-gray-500">Scheduled Publish</dt>
-                        <dd className="font-medium">
-                          {new Date(content.publish_at).toLocaleString()}
-                        </dd>
-                      </div>
-                    )}
-                  </>
-                )}
-              </dl>
-            </div>
+                      {content.publish_at && (
+                        <>
+                          <dt className="text-muted small">
+                            Scheduled Publish
+                          </dt>
+                          <dd className="mb-0">
+                            {new Date(content.publish_at).toLocaleString()}
+                          </dd>
+                        </>
+                      )}
+                    </dl>
+                  ) : (
+                    <p className="text-muted mb-0 small">
+                      Save content to see details
+                    </p>
+                  )}
+                </Card.Body>
+              </Card>
 
-            {/* Version History */}
-            {content && (
-              <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-lg font-semibold mb-4">Version History</h3>
-                <p className="text-sm text-gray-600 mb-3">
-                  View and restore previous versions of this content.
-                </p>
-                <button
-                  onClick={() => navigate(`/content/${id}/versions`)}
-                  className="w-full px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
-                >
-                  View History
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
+              {/* Version History */}
+              {content && (
+                <Card>
+                  <Card.Body>
+                    <h5 className="card-title mb-3">Version History</h5>
+                    <p className="small text-muted mb-3">
+                      View and restore previous versions of this content.
+                    </p>
+                    <Button
+                      onClick={() => navigate(`/content/${id}/versions`)}
+                      variant="outline-secondary"
+                      className="w-100"
+                    >
+                      View History
+                    </Button>
+                  </Card.Body>
+                </Card>
+              )}
+            </Col>
+          </Row>
+        </Container>
       </div>
-    </div>
+    </>
   );
 }
