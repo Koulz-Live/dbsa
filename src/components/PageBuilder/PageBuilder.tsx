@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Card, Button, Badge, ButtonGroup } from "react-bootstrap";
 import { PageBlock, BlockType, BLOCK_TEMPLATES } from "./types";
 import { HeroBlockComponent } from "./blocks/HeroBlock";
 import { RichTextBlockComponent } from "./blocks/RichTextBlock";
@@ -165,175 +166,145 @@ export const PageBuilder: React.FC<PageBuilderProps> = ({
   };
 
   return (
-    <div className="flex gap-6 h-full">
+    <div className="d-flex gap-3">
       {/* Left Panel - Block List and Preview */}
-      <div className="flex-1 space-y-4">
+      <div className="flex-fill">
         {/* Add Block Toolbar */}
-        <div className="bg-white border border-gray-200 rounded-lg p-4">
-          <h3 className="text-sm font-semibold text-gray-700 mb-3">
-            Add Block
-          </h3>
-          <div className="flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={() => addBlock("hero")}
-              className="px-3 py-1.5 text-sm bg-blue-50 text-blue-700 border border-blue-200 rounded hover:bg-blue-100"
-            >
-              + Hero
-            </button>
-            <button
-              type="button"
-              onClick={() => addBlock("richtext")}
-              className="px-3 py-1.5 text-sm bg-purple-50 text-purple-700 border border-purple-200 rounded hover:bg-purple-100"
-            >
-              + Rich Text
-            </button>
-            <button
-              type="button"
-              onClick={() => addBlock("cta")}
-              className="px-3 py-1.5 text-sm bg-green-50 text-green-700 border border-green-200 rounded hover:bg-green-100"
-            >
-              + CTA
-            </button>
-            <button
-              type="button"
-              onClick={() => addBlock("cards")}
-              className="px-3 py-1.5 text-sm bg-orange-50 text-orange-700 border border-orange-200 rounded hover:bg-orange-100"
-            >
-              + Cards
-            </button>
-            <button
-              type="button"
-              onClick={() => addBlock("image-gallery")}
-              className="px-3 py-1.5 text-sm bg-pink-50 text-pink-700 border border-pink-200 rounded hover:bg-pink-100"
-            >
-              + Gallery
-            </button>
-          </div>
-        </div>
+        <Card className="mb-3">
+          <Card.Body>
+            <h5 className="card-title h6 mb-3">Add Block</h5>
+            <div className="d-flex flex-wrap gap-2">
+              <Button
+                type="button"
+                onClick={() => addBlock("hero")}
+                variant="outline-primary"
+                size="sm"
+              >
+                <i className="bi bi-image me-1"></i>
+                Hero
+              </Button>
+              <Button
+                type="button"
+                onClick={() => addBlock("richtext")}
+                variant="outline-secondary"
+                size="sm"
+              >
+                <i className="bi bi-text-paragraph me-1"></i>
+                Rich Text
+              </Button>
+              <Button
+                type="button"
+                onClick={() => addBlock("cta")}
+                variant="outline-success"
+                size="sm"
+              >
+                <i className="bi bi-megaphone me-1"></i>
+                CTA
+              </Button>
+              <Button
+                type="button"
+                onClick={() => addBlock("cards")}
+                variant="outline-warning"
+                size="sm"
+              >
+                <i className="bi bi-grid-3x3 me-1"></i>
+                Cards
+              </Button>
+              <Button
+                type="button"
+                onClick={() => addBlock("image-gallery")}
+                variant="outline-info"
+                size="sm"
+              >
+                <i className="bi bi-images me-1"></i>
+                Gallery
+              </Button>
+            </div>
+          </Card.Body>
+        </Card>
 
         {/* Blocks Preview */}
-        <div className="space-y-4">
+        <div className="d-flex flex-column gap-3">
           {blocks.length === 0 ? (
-            <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-12 text-center">
-              <p className="text-gray-500 mb-2">No blocks added yet</p>
-              <p className="text-sm text-gray-400">
-                Click a button above to add your first block
-              </p>
-            </div>
+            <Card className="text-center py-5 bg-light border-2 border-dashed">
+              <Card.Body>
+                <i className="bi bi-box display-4 text-muted"></i>
+                <p className="text-muted mb-1 mt-3">No blocks added yet</p>
+                <p className="small text-muted">
+                  Click a button above to add your first block
+                </p>
+              </Card.Body>
+            </Card>
           ) : (
             blocks.map((block, index) => (
-              <div
+              <Card
                 key={block.id}
                 draggable
                 onDragStart={() => handleDragStart(index)}
                 onDragOver={handleDragOver}
                 onDrop={(e) => handleDrop(e, index)}
-                className={`bg-white border-2 rounded-lg overflow-hidden transition-all ${
+                className={`${
                   editingBlockId === block.id
-                    ? "border-blue-500 shadow-lg"
-                    : "border-gray-200 hover:border-gray-300"
+                    ? "border-primary border-2 shadow"
+                    : "border"
                 } ${draggedIndex === index ? "opacity-50" : ""}`}
+                style={{ cursor: "move" }}
               >
                 {/* Block Controls */}
-                <div className="bg-gray-50 border-b border-gray-200 px-4 py-2 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <button
-                      type="button"
-                      className="cursor-move text-gray-400 hover:text-gray-600"
-                      title="Drag to reorder"
-                    >
-                      <svg
-                        className="w-5 h-5"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M7 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 2zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 14zm6-8a2 2 0 1 0-.001-4.001A2 2 0 0 0 13 6zm0 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 14z" />
-                      </svg>
-                    </button>
-                    <span className="text-sm font-medium text-gray-700">
+                <Card.Header className="bg-light d-flex align-items-center justify-content-between py-2">
+                  <div className="d-flex align-items-center gap-2">
+                    <i className="bi bi-grip-vertical text-muted"></i>
+                    <Badge bg="secondary" className="fw-normal">
                       {blockTypeLabels[block.type]}
-                    </span>
+                    </Badge>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
+                  <ButtonGroup size="sm">
+                    <Button
+                      variant="outline-secondary"
                       onClick={() => moveBlockUp(index)}
                       disabled={index === 0}
-                      className="p-1 text-gray-500 hover:text-gray-700 disabled:opacity-30 disabled:cursor-not-allowed"
                       title="Move up"
                     >
-                      <svg
-                        className="w-4 h-4"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </button>
-                    <button
-                      type="button"
+                      <i className="bi bi-arrow-up"></i>
+                    </Button>
+                    <Button
+                      variant="outline-secondary"
                       onClick={() => moveBlockDown(index)}
                       disabled={index === blocks.length - 1}
-                      className="p-1 text-gray-500 hover:text-gray-700 disabled:opacity-30 disabled:cursor-not-allowed"
                       title="Move down"
                     >
-                      <svg
-                        className="w-4 h-4"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </button>
-                    <button
-                      type="button"
+                      <i className="bi bi-arrow-down"></i>
+                    </Button>
+                    <Button
+                      variant={
+                        editingBlockId === block.id
+                          ? "primary"
+                          : "outline-secondary"
+                      }
                       onClick={() =>
                         setEditingBlockId(
                           editingBlockId === block.id ? null : block.id,
                         )
                       }
-                      className={`px-3 py-1 text-xs rounded ${
-                        editingBlockId === block.id
-                          ? "bg-blue-600 text-white"
-                          : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                      }`}
                     >
-                      {editingBlockId === block.id ? "Close" : "Edit"}
-                    </button>
-                    <button
-                      type="button"
+                      <i
+                        className={`bi bi-${editingBlockId === block.id ? "x" : "pencil"}`}
+                      ></i>
+                    </Button>
+                    <Button
+                      variant="outline-danger"
                       onClick={() => deleteBlock(block.id)}
-                      className="p-1 text-red-500 hover:text-red-700"
                       title="Delete block"
                     >
-                      <svg
-                        className="w-4 h-4"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
+                      <i className="bi bi-trash"></i>
+                    </Button>
+                  </ButtonGroup>
+                </Card.Header>
 
                 {/* Block Preview */}
-                <div className="bg-white">{renderBlock(block)}</div>
-              </div>
+                <Card.Body className="p-0">{renderBlock(block)}</Card.Body>
+              </Card>
             ))
           )}
         </div>
@@ -341,13 +312,27 @@ export const PageBuilder: React.FC<PageBuilderProps> = ({
 
       {/* Right Panel - Block Editor */}
       {editingBlockId && (
-        <div className="w-96 bg-white border border-gray-200 rounded-lg p-4 sticky top-4 h-fit max-h-[calc(100vh-2rem)] overflow-y-auto">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            Edit{" "}
-            {blockTypeLabels[blocks.find((b) => b.id === editingBlockId)!.type]}
-          </h3>
-          {renderBlockEditor(blocks.find((b) => b.id === editingBlockId)!)}
-        </div>
+        <Card
+          style={{
+            width: "384px",
+            position: "sticky",
+            top: "1rem",
+            maxHeight: "calc(100vh - 2rem)",
+            overflowY: "auto",
+          }}
+        >
+          <Card.Body>
+            <h5 className="card-title mb-3">
+              Edit{" "}
+              {
+                blockTypeLabels[
+                  blocks.find((b) => b.id === editingBlockId)!.type
+                ]
+              }
+            </h5>
+            {renderBlockEditor(blocks.find((b) => b.id === editingBlockId)!)}
+          </Card.Body>
+        </Card>
       )}
     </div>
   );
