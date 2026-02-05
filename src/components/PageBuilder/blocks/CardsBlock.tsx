@@ -1,4 +1,5 @@
 import React from "react";
+import { Card, Row, Col } from "react-bootstrap";
 import { CardsBlock } from "../types";
 
 interface CardsBlockComponentProps {
@@ -12,52 +13,52 @@ export const CardsBlockComponent: React.FC<CardsBlockComponentProps> = ({
 }) => {
   const { title, cards, columns } = block.data;
 
-  const gridCols = {
-    2: "grid-cols-1 md:grid-cols-2",
-    3: "grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
-    4: "grid-cols-1 md:grid-cols-2 lg:grid-cols-4",
+  const colSize = {
+    2: 6, // 2 columns = col-md-6
+    3: 4, // 3 columns = col-md-4
+    4: 3, // 4 columns = col-md-3
   }[columns];
 
   return (
-    <div className={`p-8 ${isEditing ? "border-2 border-blue-300" : ""}`}>
-      {title && (
-        <h2 className="text-3xl font-bold text-center mb-8 text-gray-900">
-          {title}
-        </h2>
-      )}
+    <div className={`p-4 ${isEditing ? "border border-2 border-primary" : ""}`}>
+      <div className="container py-4">
+        {title && (
+          <h2 className="display-5 fw-bold text-center mb-5">{title}</h2>
+        )}
 
-      <div className={`grid ${gridCols} gap-6 max-w-7xl mx-auto`}>
-        {cards.map((card) => (
-          <div
-            key={card.id}
-            className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-          >
-            {card.image && (
-              <img
-                src={card.image}
-                alt={card.title}
-                className="w-full h-48 object-cover"
-              />
-            )}
+        <Row className="g-4">
+          {cards.map((card) => (
+            <Col key={card.id} xs={12} md={colSize}>
+              <Card className="h-100 shadow-sm">
+                {card.image && (
+                  <Card.Img
+                    variant="top"
+                    src={card.image}
+                    alt={card.title}
+                    style={{ height: "12rem", objectFit: "cover" }}
+                  />
+                )}
 
-            <div className="p-6">
-              <h3 className="text-xl font-semibold mb-2 text-gray-900">
-                {card.title}
-              </h3>
-              <p className="text-gray-600 mb-4">{card.description}</p>
+                <Card.Body>
+                  <Card.Title className="h5">{card.title}</Card.Title>
+                  <Card.Text className="text-muted">
+                    {card.description}
+                  </Card.Text>
 
-              {card.link && (
-                <a
-                  href={card.link}
-                  className="text-blue-600 hover:text-blue-700 font-medium"
-                  onClick={(e) => isEditing && e.preventDefault()}
-                >
-                  Learn more →
-                </a>
-              )}
-            </div>
-          </div>
-        ))}
+                  {card.link && (
+                    <a
+                      href={card.link}
+                      className="btn btn-link p-0 text-decoration-none"
+                      onClick={(e) => isEditing && e.preventDefault()}
+                    >
+                      Learn more <i className="bi bi-arrow-right"></i>
+                    </a>
+                  )}
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import React from "react";
+import { Row, Col } from "react-bootstrap";
 import { ImageGalleryBlock } from "../types";
 
 interface ImageGalleryBlockComponentProps {
@@ -11,48 +12,88 @@ export const ImageGalleryBlockComponent: React.FC<
 > = ({ block, isEditing }) => {
   const { title, images, layout } = block.data;
 
-  const layoutClass = {
-    grid: "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4",
-    masonry: "columns-2 md:columns-3 lg:columns-4 gap-4",
-    carousel: "flex overflow-x-auto gap-4 snap-x snap-mandatory",
-  }[layout];
+  const renderGrid = () => (
+    <Row className="g-3">
+      {images.map((image) => (
+        <Col key={image.id} xs={6} md={4} lg={3}>
+          <div
+            className="position-relative overflow-hidden rounded"
+            style={{ paddingTop: "100%" }}
+          >
+            <img
+              src={image.url}
+              alt={image.alt}
+              className="position-absolute top-0 start-0 w-100 h-100 object-fit-cover"
+            />
+            {image.caption && (
+              <div className="position-absolute bottom-0 start-0 end-0 bg-dark bg-opacity-75 text-white p-2">
+                <p className="mb-0 small">{image.caption}</p>
+              </div>
+            )}
+          </div>
+        </Col>
+      ))}
+    </Row>
+  );
+
+  const renderMasonry = () => (
+    <div className="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
+      {images.map((image) => (
+        <div key={image.id} className="col">
+          <div className="position-relative overflow-hidden rounded">
+            <img src={image.url} alt={image.alt} className="w-100 h-auto" />
+            {image.caption && (
+              <div className="position-absolute bottom-0 start-0 end-0 bg-dark bg-opacity-75 text-white p-2">
+                <p className="mb-0 small">{image.caption}</p>
+              </div>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
+  const renderCarousel = () => (
+    <div
+      className="d-flex overflow-auto gap-3"
+      style={{ scrollSnapType: "x mandatory" }}
+    >
+      {images.map((image) => (
+        <div
+          key={image.id}
+          className="flex-shrink-0 position-relative overflow-hidden rounded"
+          style={{ width: "16rem", scrollSnapAlign: "start" }}
+        >
+          <img src={image.url} alt={image.alt} className="w-100 h-auto" />
+          {image.caption && (
+            <div className="position-absolute bottom-0 start-0 end-0 bg-dark bg-opacity-75 text-white p-2">
+              <p className="mb-0 small">{image.caption}</p>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
 
   return (
-    <div className={`p-8 ${isEditing ? "border-2 border-blue-300" : ""}`}>
-      {title && (
-        <h2 className="text-3xl font-bold text-center mb-8 text-gray-900">
-          {title}
-        </h2>
-      )}
+    <div className={`p-4 ${isEditing ? "border border-2 border-primary" : ""}`}>
+      <div className="container py-4">
+        {title && (
+          <h2 className="display-5 fw-bold text-center mb-5">{title}</h2>
+        )}
 
-      {images.length === 0 ? (
-        <div className="text-center py-12 bg-gray-50 rounded-lg">
-          <p className="text-gray-500">No images added yet</p>
-        </div>
-      ) : (
-        <div className={layoutClass}>
-          {images.map((image) => (
-            <div
-              key={image.id}
-              className={`${
-                layout === "carousel" ? "flex-shrink-0 w-64 snap-start" : ""
-              } group relative overflow-hidden rounded-lg`}
-            >
-              <img
-                src={image.url}
-                alt={image.alt}
-                className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
-              />
-
-              {image.caption && (
-                <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white p-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <p className="text-sm">{image.caption}</p>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
+        {images.length === 0 ? (
+          <div className="text-center py-5 bg-light rounded">
+            <p className="text-muted mb-0">No images added yet</p>
+          </div>
+        ) : (
+          <>
+            {layout === "grid" && renderGrid()}
+            {layout === "masonry" && renderMasonry()}
+            {layout === "carousel" && renderCarousel()}
+          </>
+        )}
+      </div>
     </div>
   );
 };

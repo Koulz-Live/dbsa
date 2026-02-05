@@ -21,22 +21,25 @@ export const CTABlockComponent: React.FC<CTABlockComponentProps> = ({
 
   return (
     <div
-      className={`p-12 text-center ${isEditing ? "border-2 border-blue-300" : ""}`}
+      className={`py-5 text-center ${isEditing ? "border border-2 border-primary" : ""}`}
       style={{
-        backgroundColor: backgroundColor || "#3b82f6",
+        backgroundColor: backgroundColor || "#0d6efd",
         color: textColor || "#ffffff",
+        padding: "5rem 1rem",
       }}
     >
-      <div className="max-w-3xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-bold mb-4">{title}</h2>
+      <div className="container" style={{ maxWidth: "48rem" }}>
+        <h2 className="display-4 fw-bold mb-4">{title}</h2>
 
         {description && (
-          <p className="text-lg md:text-xl mb-8 opacity-90">{description}</p>
+          <p className="fs-5 mb-4" style={{ opacity: 0.9 }}>
+            {description}
+          </p>
         )}
 
         <a
           href={buttonUrl}
-          className="inline-block px-8 py-3 bg-white text-gray-900 rounded-lg hover:bg-gray-100 transition-colors font-semibold shadow-lg"
+          className="btn btn-light btn-lg shadow"
           onClick={(e) => isEditing && e.preventDefault()}
         >
           {buttonText}

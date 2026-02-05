@@ -14,33 +14,40 @@ export const HeroBlockComponent: React.FC<HeroBlockComponentProps> = ({
     block.data;
 
   const alignmentClass = {
-    left: "text-left",
+    left: "text-start",
     center: "text-center",
-    right: "text-right",
+    right: "text-end",
   }[alignment];
 
   return (
     <div
-      className={`relative min-h-[400px] flex items-center justify-center p-8 ${
-        isEditing ? "border-2 border-blue-300" : ""
+      className={`position-relative d-flex align-items-center justify-content-center p-5 ${
+        isEditing ? "border border-2 border-primary" : ""
       }`}
       style={{
+        minHeight: "400px",
         backgroundImage: backgroundImage
           ? `url(${backgroundImage})`
           : undefined,
-        backgroundColor: !backgroundImage ? "#f3f4f6" : undefined,
+        backgroundColor: !backgroundImage ? "#f8f9fa" : undefined,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
       {backgroundImage && (
-        <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+        <div
+          className="position-absolute top-0 start-0 w-100 h-100 bg-dark"
+          style={{ opacity: 0.4 }}
+        ></div>
       )}
 
-      <div className={`relative z-10 max-w-4xl mx-auto ${alignmentClass}`}>
+      <div
+        className={`position-relative z-1 container ${alignmentClass}`}
+        style={{ maxWidth: "56rem" }}
+      >
         <h1
-          className={`text-4xl md:text-5xl font-bold mb-4 ${
-            backgroundImage ? "text-white" : "text-gray-900"
+          className={`display-3 fw-bold mb-4 ${
+            backgroundImage ? "text-white" : "text-dark"
           }`}
         >
           {title}
@@ -48,8 +55,8 @@ export const HeroBlockComponent: React.FC<HeroBlockComponentProps> = ({
 
         {subtitle && (
           <p
-            className={`text-xl md:text-2xl mb-6 ${
-              backgroundImage ? "text-gray-100" : "text-gray-600"
+            className={`fs-4 mb-4 ${
+              backgroundImage ? "text-white-50" : "text-muted"
             }`}
           >
             {subtitle}
@@ -59,7 +66,7 @@ export const HeroBlockComponent: React.FC<HeroBlockComponentProps> = ({
         {ctaText && ctaUrl && (
           <a
             href={ctaUrl}
-            className="inline-block px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+            className="btn btn-primary btn-lg"
             onClick={(e) => isEditing && e.preventDefault()}
           >
             {ctaText}
