@@ -11,7 +11,62 @@ const supabase = createClient(
   config.supabase.serviceRoleKey,
 );
 
-// All routes require Admin role
+// Public endpoints (authenticated users only, no role restriction)
+// These endpoints need to be available to all authenticated users
+
+// GET /api/admin/content-types - List all content types
+router.get("/content-types", async (_req: Request, res: Response) => {
+  try {
+    console.log("📋 Fetching content types...");
+    const { data, error } = await supabase
+      .from("content_types")
+      .select("id, name, slug")
+      .eq("is_active", true)
+      .order("name");
+
+    if (error) {
+      console.error("❌ Error fetching content types:", error);
+      throw error;
+    }
+
+    console.log(`✅ Found ${data?.length || 0} content types`);
+    res.json(data || []);
+  } catch (error) {
+    console.error("Error fetching content types:", error);
+    res.status(500).json({
+      code: "INTERNAL_ERROR",
+      message: "Failed to fetch content types",
+    });
+  }
+});
+
+// GET /api/admin/departments - List all departments
+router.get("/departments", async (_req: Request, res: Response) => {
+  try {
+    console.log("📋 Fetching departments...");
+    const { data, error } = await supabase
+      .from("departments")
+      .select("id, name")
+      .eq("is_active", true)
+      .order("name");
+
+    if (error) {
+      console.error("❌ Error fetching departments:", error);
+      throw error;
+    }
+
+    console.log(`✅ Found ${data?.length || 0} departments`);
+    res.json(data || []);
+  } catch (error) {
+    console.error("Error fetching departments:", error);
+    res.status(500).json({
+      code: "INTERNAL_ERROR",
+      message: "Failed to fetch departments",
+    });
+  }
+});
+
+// All routes below require Admin role
 router.use(requireRole("Admin"));
 
 // GET /api/admin/users - List all users

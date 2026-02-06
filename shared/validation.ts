@@ -10,7 +10,7 @@ export const contentItemSchema = z.object({
     .max(255)
     .regex(/^[a-z0-9-]+$/),
   excerpt: z.string().max(500).optional(),
-  hero_image_url: z.string().url().optional(),
+  hero_image_url: z.string().url().optional().or(z.literal("")),
   page_data: z
     .object({
       blocks: z.array(

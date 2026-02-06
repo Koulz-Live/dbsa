@@ -17,6 +17,18 @@ import { apiClient } from "../lib/apiClient";
 import { ContentItem, ContentStatus, Block } from "../../shared/types";
 import { PageBuilder, PageBlock } from "../components/PageBuilder";
 
+// Types for dropdowns
+interface ContentType {
+  id: string;
+  name: string;
+  slug: string;
+}
+
+interface Department {
+  id: string;
+  name: string;
+}
+
 // Helper to convert database blocks to PageBlock format
 const convertToPageBlocks = (blocks: Block[] | undefined): PageBlock[] => {
   if (!blocks) return [];
@@ -55,10 +67,14 @@ export function ContentEditor() {
   const navigate = useNavigate();
   const isEditMode = !!id;
 
-  const [loading, setLoading] = useState(isEditMode);
+  const [loading, setLoading] = useState(true); // Always load initially to fetch dropdowns
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [content, setContent] = useState<ContentItem | null>(null);
+
+  // Dropdown data
+  const [contentTypes, setContentTypes] = useState<ContentType[]>([]);
+  const [departments, setDepartments] = useState<Department[]>([]);
 
   const [formData, setFormData] = useState<ContentFormData>({
     title: "",
@@ -74,10 +90,52 @@ export function ContentEditor() {
   });
 
   useEffect(() => {
+    fetchDropdownData();
     if (isEditMode) {
       fetchContent();
     }
   }, [id]);
+
+  const fetchDropdownData = async () => {
+    try {
+      // Fetch content types and departments in parallel
+      const [typesRes, deptsRes] = await Promise.all([
+        apiClient.get("/api/admin/content-types"),
+        apiClient.get("/api/admin/departments"),
+      ]);
+
+      setContentTypes(typesRes.data || []);
+      setDepartments(deptsRes.data || []);
+
+      // Clear any previous errors since we succeeded
+      if (error?.includes("Failed to load content types")) {
+        setError(null);
+      }
+    } catch (err: unknown) {
+      const error = err as {
+        response?: { data?: { message?: string }; status?: number };
+      };
+      console.error("Failed to fetch dropdown data:", err);
+
+      // Show more detailed error message
+      const statusCode = error.response?.status;
+      const errorMsg = error.response?.data?.message;
+
+      if (statusCode === 401) {
+        setError("Authentication error: Please log in again");
+      } else if (statusCode === 403) {
+        setError("Permission denied: You don't have access to content types");
+      } else {
+        setError(
+          `Warning: Failed to load content types and departments${errorMsg ? `: ${errorMsg}` : ""}`,
+        );
+      }
+    } finally {
+      if (!isEditMode) {
+        setLoading(false);
+      }
+    }
+  };
 
   const fetchContent = async () => {
     try {
@@ -113,12 +171,28 @@ export function ContentEditor() {
       setError(null);
 
       // Prepare payload with page_data
-      const payload = {
-        ...formData,
+      // Remove empty optional fields to avoid validation errors
+      const payload: any = {
+        title: formData.title,
+        slug: formData.slug,
+        content_type_id: formData.content_type_id,
         page_data: {
           blocks: convertFromPageBlocks(formData.page_blocks),
         },
       };
+
+      // Add optional fields only if they have values
+      if (formData.excerpt) payload.excerpt = formData.excerpt;
+      if (formData.department_id)
+        payload.department_id = formData.department_id;
+      if (formData.meta_title) payload.meta_title = formData.meta_title;
+      if (formData.meta_description)
+        payload.meta_description = formData.meta_description;
+      if (formData.meta_keywords && formData.meta_keywords.length > 0) {
+        payload.meta_keywords = formData.meta_keywords;
+      }
+      if (formData.hero_image_url)
+        payload.hero_image_url = formData.hero_image_url;
 
       if (isEditMode) {
         await apiClient.patch(`/content/${id}`, payload);
@@ -129,8 +203,19 @@ export function ContentEditor() {
         navigate(`/content/${response.data.id}`);
       }
     } catch (err: unknown) {
-      const error = err as { response?: { data?: { message?: string } } };
-      setError(error.response?.data?.message || "Failed to save content");
+      const error = err as {
+        response?: { data?: { message?: string; details?: any } };
+      };
+      const errorMessage =
+        error.response?.data?.message || "Failed to save content";
+      const errorDetails = error.response?.data?.details;
+
+      if (errorDetails) {
+        console.error("Validation errors:", errorDetails);
+        setError(`${errorMessage}\n${JSON.stringify(errorDetails, null, 2)}`);
+      } else {
+        setError(errorMessage);
+      }
     } finally {
       setSaving(false);
     }
@@ -322,10 +407,11 @@ export function ContentEditor() {
                             required
                           >
                             <option value="">Select type...</option>
-                            <option value="page">Page</option>
-                            <option value="article">Article</option>
-                            <option value="news">News</option>
-                            <option value="event">Event</option>
+                            {contentTypes.map((type) => (
+                              <option key={type.id} value={type.id}>
+                                {type.name}
+                              </option>
+                            ))}
                           </Form.Select>
                         </Form.Group>
                       </Col>
@@ -343,9 +429,11 @@ export function ContentEditor() {
                             }
                           >
                             <option value="">Select department...</option>
-                            <option value="dept1">Marketing</option>
-                            <option value="dept2">Communications</option>
-                            <option value="dept3">Operations</option>
+                            {departments.map((dept) => (
+                              <option key={dept.id} value={dept.id}>
+                                {dept.name}
+                              </option>
+                            ))}
                           </Form.Select>
                         </Form.Group>
                       </Col>
