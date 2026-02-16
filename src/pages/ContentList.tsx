@@ -60,9 +60,12 @@ export function ContentList() {
       if (search) params.search = search;
       if (statusFilter) params.status = statusFilter;
 
-      const response = await apiClient.get<ContentListResponse>("/content", {
-        params,
-      });
+      const response = await apiClient.get<ContentListResponse>(
+        "/api/content",
+        {
+          params,
+        },
+      );
 
       setContent(response.data.data);
       setTotalPages(response.data.pagination.totalPages);

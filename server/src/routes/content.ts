@@ -28,10 +28,7 @@ router.get("/", async (req: Request, res: Response) => {
 
     let query = supabase
       .from("content_items")
-      .select(
-        "*, content_types(name), departments(name), author:auth.users(email)",
-        { count: "exact" },
-      );
+      .select("*, content_types(name), departments(name)", { count: "exact" });
 
     // Apply filters
     if (status) query = query.eq("status", status);
