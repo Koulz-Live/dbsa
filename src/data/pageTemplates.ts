@@ -149,6 +149,7 @@ export const landingPageTemplate: PageTemplate = {
     {
       type: "richtext",
       data: {
+        fullWidth: true,
         content: `
           <section class="hero-wrap">
             <div class="container-fluid px-3 px-lg-4 pb-4">
@@ -538,6 +539,7 @@ export const landingPageTemplate: PageTemplate = {
     {
       type: "richtext",
       data: {
+        fullWidth: true,
         content: `
           <section class="stay-wrap">
             <div class="container-fluid px-0">

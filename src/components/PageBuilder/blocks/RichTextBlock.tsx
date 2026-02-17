@@ -13,7 +13,11 @@ export const RichTextBlockComponent: React.FC<RichTextBlockComponentProps> = ({
   const { content, fullWidth } = block.data;
 
   return (
-    <div className={`p-4 ${isEditing ? "border border-2 border-primary" : ""}`}>
+    <div
+      className={`${fullWidth ? "p-0" : "p-4"} ${
+        isEditing ? "border border-2 border-primary" : ""
+      }`}
+    >
       <div
         className={fullWidth ? "container-fluid px-0" : "container px-0"}
         style={{ maxWidth: fullWidth ? "100%" : "65ch" }}
