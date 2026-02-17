@@ -12,6 +12,7 @@ export const HeroBlockComponent: React.FC<HeroBlockComponentProps> = ({
 }) => {
   const { title, subtitle, backgroundImage, ctaText, ctaUrl, alignment } =
     block.data;
+  const { fullWidth } = block.data;
 
   const alignmentClass = {
     left: "text-start",
@@ -42,8 +43,10 @@ export const HeroBlockComponent: React.FC<HeroBlockComponentProps> = ({
       )}
 
       <div
-        className={`position-relative z-1 container ${alignmentClass}`}
-        style={{ maxWidth: "56rem" }}
+        className={`position-relative z-1 ${
+          fullWidth ? "container-fluid px-3 px-lg-5" : "container"
+        } ${alignmentClass}`}
+        style={{ maxWidth: fullWidth ? "100%" : "56rem" }}
       >
         <h1
           className={`display-3 fw-bold mb-4 ${

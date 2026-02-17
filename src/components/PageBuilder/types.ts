@@ -3,7 +3,13 @@
  * Defines the structure for all page builder blocks
  */
 
-export type BlockType = "hero" | "richtext" | "cta" | "cards" | "image-gallery";
+export type BlockType =
+  | "hero"
+  | "richtext"
+  | "cta"
+  | "cards"
+  | "image-gallery"
+  | "tabs";
 
 export interface BaseBlock {
   id: string;
@@ -20,6 +26,7 @@ export interface HeroBlock extends BaseBlock {
     ctaText?: string;
     ctaUrl?: string;
     alignment: "left" | "center" | "right";
+    fullWidth?: boolean;
   };
 }
 
@@ -47,6 +54,11 @@ export interface Card {
   title: string;
   description: string;
   image?: string;
+  imageAlt?: string;
+  isDecorative?: boolean;
+  category?: string;
+  readingTime?: string;
+  contentType?: string;
   link?: string;
 }
 
@@ -56,6 +68,8 @@ export interface CardsBlock extends BaseBlock {
     title?: string;
     cards: Card[];
     columns: 2 | 3 | 4;
+    fullWidth?: boolean;
+    titleAlign?: "start" | "center";
   };
 }
 
@@ -73,12 +87,40 @@ export interface ImageGalleryBlock extends BaseBlock {
   };
 }
 
+export interface TabStat {
+  id: string;
+  value: string;
+  label: string;
+}
+
+export interface TabItem {
+  id: string;
+  label: string;
+  title: string;
+  description: string;
+  icon?: string;
+  image?: string;
+  linkText?: string;
+  linkUrl?: string;
+  stats?: TabStat[];
+}
+
+export interface TabsBlock extends BaseBlock {
+  type: "tabs";
+  data: {
+    title?: string;
+    tabs: TabItem[];
+    fullWidth?: boolean;
+  };
+}
+
 export type PageBlock =
   | HeroBlock
   | RichTextBlock
   | CTABlock
   | CardsBlock
-  | ImageGalleryBlock;
+  | ImageGalleryBlock
+  | TabsBlock;
 
 export interface PageBuilderData {
   blocks: PageBlock[];
@@ -142,6 +184,24 @@ export const BLOCK_TEMPLATES: Record<
       title: "Image Gallery",
       layout: "grid",
       images: [],
+    },
+  },
+  tabs: {
+    type: "tabs",
+    data: {
+      title: "Tabbed Section",
+      tabs: [
+        {
+          id: "tab-1",
+          label: "Tab 1",
+          title: "Tab headline",
+          description: "Tab description goes here.",
+          stats: [
+            { id: "stat-1", value: "2×", label: "sample metric" },
+            { id: "stat-2", value: "35%", label: "improvement" },
+          ],
+        },
+      ],
     },
   },
 };

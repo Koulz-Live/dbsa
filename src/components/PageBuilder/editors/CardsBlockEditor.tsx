@@ -70,6 +70,35 @@ export const CardsBlockEditor: React.FC<CardsBlockEditorProps> = ({
         </select>
       </div>
 
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Title Alignment
+        </label>
+        <select
+          value={block.data.titleAlign || "center"}
+          onChange={(e) =>
+            updateData({ titleAlign: e.target.value as "start" | "center" })
+          }
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+        >
+          <option value="center">Center</option>
+          <option value="start">Left</option>
+        </select>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <input
+          id="cards-full-width"
+          type="checkbox"
+          checked={block.data.fullWidth || false}
+          onChange={(e) => updateData({ fullWidth: e.target.checked })}
+          className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+        />
+        <label htmlFor="cards-full-width" className="text-sm text-gray-700">
+          Full width section
+        </label>
+      </div>
+
       <div className="border-t pt-4">
         <div className="flex items-center justify-between mb-3">
           <h4 className="font-medium text-gray-900">Cards</h4>
@@ -130,6 +159,51 @@ export const CardsBlockEditor: React.FC<CardsBlockEditorProps> = ({
                   />
                 </div>
 
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 mb-1">
+                      Category
+                    </label>
+                    <input
+                      type="text"
+                      value={card.category || ""}
+                      onChange={(e) =>
+                        updateCard(card.id, { category: e.target.value })
+                      }
+                      className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Insight"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 mb-1">
+                      Content Type
+                    </label>
+                    <input
+                      type="text"
+                      value={card.contentType || ""}
+                      onChange={(e) =>
+                        updateCard(card.id, { contentType: e.target.value })
+                      }
+                      className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Article"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 mb-1">
+                      Reading Time
+                    </label>
+                    <input
+                      type="text"
+                      value={card.readingTime || ""}
+                      onChange={(e) =>
+                        updateCard(card.id, { readingTime: e.target.value })
+                      }
+                      className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="5 min"
+                    />
+                  </div>
+                </div>
+
                 <div>
                   <label className="block text-xs font-medium text-gray-600 mb-1">
                     Image URL (optional)
@@ -143,6 +217,38 @@ export const CardsBlockEditor: React.FC<CardsBlockEditorProps> = ({
                     className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                     placeholder="https://example.com/image.jpg"
                   />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">
+                    Image Alt Text
+                  </label>
+                  <input
+                    type="text"
+                    value={card.imageAlt || ""}
+                    onChange={(e) =>
+                      updateCard(card.id, { imageAlt: e.target.value })
+                    }
+                    className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Describe the image"
+                  />
+                  <div className="mt-2 flex items-center gap-2">
+                    <input
+                      id={`decorative-${card.id}`}
+                      type="checkbox"
+                      checked={card.isDecorative || false}
+                      onChange={(e) =>
+                        updateCard(card.id, { isDecorative: e.target.checked })
+                      }
+                      className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+                    />
+                    <label
+                      htmlFor={`decorative-${card.id}`}
+                      className="text-xs text-gray-600"
+                    >
+                      Decorative image (leave alt empty)
+                    </label>
+                  </div>
                 </div>
 
                 <div>

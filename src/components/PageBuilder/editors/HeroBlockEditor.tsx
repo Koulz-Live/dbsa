@@ -77,6 +77,19 @@ export const HeroBlockEditor: React.FC<HeroBlockEditorProps> = ({
         </select>
       </div>
 
+      <div className="flex items-center gap-2">
+        <input
+          id="hero-full-width"
+          type="checkbox"
+          checked={block.data.fullWidth || false}
+          onChange={(e) => updateData({ fullWidth: e.target.checked })}
+          className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+        />
+        <label htmlFor="hero-full-width" className="text-sm text-gray-700">
+          Full width content
+        </label>
+      </div>
+
       <div className="border-t pt-4">
         <h4 className="font-medium text-gray-900 mb-3">
           Call to Action (Optional)

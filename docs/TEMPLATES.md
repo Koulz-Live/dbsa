@@ -50,6 +50,7 @@ This document describes the two page templates created for the DBSA CMS using th
    - Blue background (#0d6efd)
 
 **Best For**:
+
 - Product launches
 - Marketing campaigns
 - Lead generation pages
@@ -115,6 +116,7 @@ This document describes the two page templates created for the DBSA CMS using th
    - Green background (#198754)
 
 **Best For**:
+
 - Company about pages
 - Corporate websites
 - Team introductions
@@ -151,17 +153,22 @@ This document describes the two page templates created for the DBSA CMS using th
 ## Template Features
 
 ### Image Sources
+
 All template images use Unsplash placeholder images. Replace these with your own images for production use.
 
 ### Responsive Design
+
 All blocks are built with Bootstrap 5.3 and are fully responsive:
+
 - Mobile-first design
 - Adaptive column layouts (e.g., 4 columns → stacks on mobile)
 - Flexible image sizing
 - Readable typography at all screen sizes
 
 ### Customization
+
 Every aspect of the templates can be customized:
+
 - **Text**: All headings, paragraphs, and descriptions
 - **Images**: Upload or link to custom images
 - **Colors**: Background and text colors for CTA and rich text blocks
@@ -182,6 +189,7 @@ Every aspect of the templates can be customized:
 ## Best Practices
 
 ### When Using Landing Page Template:
+
 - Update the hero image to match your brand
 - Customize feature descriptions to your actual features
 - Replace testimonials with real customer quotes
@@ -190,6 +198,7 @@ Every aspect of the templates can be customized:
 - Test conversion tracking on CTA buttons
 
 ### When Using About Us Template:
+
 - Replace company story with your actual history
 - Update team member photos and bios
 - Add your company's core values
@@ -198,6 +207,7 @@ Every aspect of the templates can be customized:
 - Keep content authentic and relatable
 
 ### General Tips:
+
 - Maintain consistent brand colors throughout
 - Use high-quality, optimized images
 - Keep text concise and scannable
@@ -243,6 +253,7 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
 ## Technical Implementation
 
 ### Files Created:
+
 - `/src/data/pageTemplates.ts` - Template definitions
 - `/src/components/TemplateSelector/TemplateSelector.tsx` - Modal component
 - `/src/components/TemplateSelector/index.ts` - Exports
@@ -252,7 +263,9 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
 - Updated `/src/components/Navigation.tsx` - Added templates link
 
 ### Template Structure:
+
 Each template is a `PageTemplate` object containing:
+
 - `id`: Unique identifier
 - `name`: Display name
 - `description`: Template description
@@ -261,6 +274,7 @@ Each template is a `PageTemplate` object containing:
 - `blocks`: Array of page blocks (without id and order)
 
 ### Conversion Process:
+
 1. Template blocks are stored without `id` and `order`
 2. When applied, each block receives:
    - Unique `id`: Timestamp-based + index
@@ -310,6 +324,7 @@ Potential improvements for the template system:
 ## Support
 
 For questions or issues with templates:
+
 - Check the PageBuilder block documentation
 - Review the template source code
 - Test in Templates Preview page before publishing

@@ -12,7 +12,7 @@ import {
   Spinner,
   InputGroup,
 } from "react-bootstrap";
-import { Navigation } from "../components/Navigation";
+import { AppShell } from "../components/AppShell";
 import { apiClient } from "../lib/apiClient";
 import { ContentItem, ContentStatus, Block } from "../../shared/types";
 import { PageBuilder, PageBlock } from "../components/PageBuilder";
@@ -275,21 +275,19 @@ export function ContentEditor() {
 
   if (loading) {
     return (
-      <>
-        <Navigation />
+      <AppShell>
         <Container className="py-5">
           <div className="text-center">
             <Spinner animation="border" variant="primary" className="mb-3" />
-            <p className="text-muted">Loading content...</p>
+            <p className="text-muted text-prose">Loading content...</p>
           </div>
         </Container>
-      </>
+      </AppShell>
     );
   }
 
   return (
-    <>
-      <Navigation />
+    <AppShell>
       <div className="min-vh-100 bg-light">
         <Container className="py-4">
           {/* Header */}
@@ -688,6 +686,6 @@ export function ContentEditor() {
           </Row>
         </Container>
       </div>
-    </>
+    </AppShell>
   );
 }

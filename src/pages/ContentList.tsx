@@ -13,7 +13,7 @@ import {
   Alert,
   Spinner,
 } from "react-bootstrap";
-import { Navigation } from "../components/Navigation";
+import { AppShell } from "../components/AppShell";
 import { apiClient } from "../lib/apiClient";
 import { ContentItem, ContentStatus } from "../../shared/types";
 
@@ -128,14 +128,13 @@ export function ContentList() {
 
   if (loading && content.length === 0) {
     return (
-      <>
-        <Navigation />
-        <Container fluid className="py-4 bg-light min-vh-100">
+      <AppShell>
+        <Container fluid className="py-4 bg-light">
           <Container>
             <Row className="mb-4">
               <Col>
                 <h1 className="h3 mb-2">Content Management</h1>
-                <p className="text-muted">
+                <p className="text-muted text-prose">
                   Manage all your content items across the CMS
                 </p>
               </Col>
@@ -146,15 +145,14 @@ export function ContentList() {
             </div>
           </Container>
         </Container>
-      </>
+      </AppShell>
     );
   }
 
   if (error && content.length === 0) {
     return (
-      <>
-        <Navigation />
-        <Container fluid className="py-4 bg-light min-vh-100">
+      <AppShell>
+        <Container fluid className="py-4 bg-light">
           <Container>
             <Row className="mb-4">
               <Col>
@@ -163,27 +161,26 @@ export function ContentList() {
             </Row>
             <Alert variant="danger">
               <Alert.Heading>Error Loading Content</Alert.Heading>
-              <p>{error}</p>
+              <p className="text-prose">{error}</p>
               <Button variant="outline-danger" size="sm" onClick={fetchContent}>
                 Try Again
               </Button>
             </Alert>
           </Container>
         </Container>
-      </>
+      </AppShell>
     );
   }
 
   return (
-    <>
-      <Navigation />
-      <Container fluid className="py-4 bg-light min-vh-100">
+    <AppShell>
+      <Container fluid className="py-4 bg-light">
         <Container>
           {/* Header */}
           <Row className="mb-4">
             <Col>
               <h1 className="h3 mb-2">Content Management</h1>
-              <p className="text-muted">
+              <p className="text-muted text-prose">
                 Manage all your content items across the CMS
               </p>
             </Col>
@@ -362,6 +359,6 @@ export function ContentList() {
           )}
         </Container>
       </Container>
-    </>
+    </AppShell>
   );
 }

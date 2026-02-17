@@ -11,7 +11,7 @@ import {
   ListGroup,
 } from "react-bootstrap";
 import { apiClient } from "../lib/apiClient";
-import { Navigation } from "../components/Navigation";
+import { AppShell } from "../components/AppShell";
 
 interface DashboardStats {
   total_content: number;
@@ -92,34 +92,32 @@ export const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-vh-100 bg-light">
-        <Navigation />
+      <AppShell>
         <div
           className="d-flex align-items-center justify-content-center"
-          style={{ minHeight: "calc(100vh - 56px)" }}
+          style={{ minHeight: "calc(100vh - 120px)" }}
         >
           <div className="text-center">
             <Spinner animation="border" variant="primary" className="mb-3" />
-            <p className="text-muted">Loading dashboard...</p>
+            <p className="text-muted text-prose">Loading dashboard...</p>
           </div>
         </div>
-      </div>
+      </AppShell>
     );
   }
 
   if (error) {
     return (
-      <div className="min-vh-100 bg-light">
-        <Navigation />
+      <AppShell>
         <Container className="py-5">
           <Row className="justify-content-center">
             <Col lg={8}>
               <Alert variant="danger">
                 <Alert.Heading>Error Loading Dashboard</Alert.Heading>
-                <p>{error}</p>
+                <p className="text-prose">{error}</p>
                 <hr />
                 <div className="mb-0">
-                  <p className="mb-2">
+                  <p className="mb-2 text-prose">
                     <strong>Possible reasons:</strong>
                   </p>
                   <ul className="mb-3">
@@ -127,7 +125,7 @@ export const Dashboard = () => {
                     <li>The backend server is not running</li>
                     <li>There is a network connectivity issue</li>
                   </ul>
-                  <p className="mb-2">
+                  <p className="mb-2 text-prose">
                     <strong>To fix this:</strong>
                   </p>
                   <ol>
@@ -154,31 +152,28 @@ export const Dashboard = () => {
             </Col>
           </Row>
         </Container>
-      </div>
+      </AppShell>
     );
   }
 
   if (!stats) {
     return (
-      <div className="min-vh-100 bg-light">
-        <Navigation />
+      <AppShell>
         <Container className="py-5">
           <Alert variant="warning">No statistics available</Alert>
         </Container>
-      </div>
+      </AppShell>
     );
   }
 
   return (
-    <div className="min-vh-100 bg-light">
-      <Navigation />
-
+    <AppShell>
       <div className="bg-white border-bottom">
         <Container className="py-4">
           <Row className="align-items-center">
             <Col>
               <h1 className="h3 mb-0">Dashboard</h1>
-              <p className="text-muted mb-0">Welcome to DBSA CMS</p>
+              <p className="text-muted mb-0 text-prose">Welcome to DBSA CMS</p>
             </Col>
             <Col xs="auto">
               <Link to="/content/new" className="btn btn-primary">
@@ -358,6 +353,6 @@ export const Dashboard = () => {
           </Col>
         </Row>
       </Container>
-    </div>
+    </AppShell>
   );
 };

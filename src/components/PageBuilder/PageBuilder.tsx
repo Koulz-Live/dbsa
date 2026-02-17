@@ -6,11 +6,13 @@ import { RichTextBlockComponent } from "./blocks/RichTextBlock";
 import { CTABlockComponent } from "./blocks/CTABlock";
 import { CardsBlockComponent } from "./blocks/CardsBlock";
 import { ImageGalleryBlockComponent } from "./blocks/ImageGalleryBlock";
+import { TabsBlockComponent } from "./blocks/TabsBlock";
 import { HeroBlockEditor } from "./editors/HeroBlockEditor";
 import { RichTextBlockEditor } from "./editors/RichTextBlockEditor";
 import { CTABlockEditor } from "./editors/CTABlockEditor";
 import { CardsBlockEditor } from "./editors/CardsBlockEditor";
 import { ImageGalleryBlockEditor } from "./editors/ImageGalleryBlockEditor";
+import { TabsBlockEditor } from "./editors/TabsBlockEditor";
 
 interface PageBuilderProps {
   blocks: PageBlock[];
@@ -109,6 +111,8 @@ export const PageBuilder: React.FC<PageBuilderProps> = ({
         return <CardsBlockComponent block={block} isEditing />;
       case "image-gallery":
         return <ImageGalleryBlockComponent block={block} isEditing />;
+      case "tabs":
+        return <TabsBlockComponent block={block} isEditing />;
       default:
         return null;
     }
@@ -152,6 +156,13 @@ export const PageBuilder: React.FC<PageBuilderProps> = ({
             onChange={(updated) => updateBlock(block.id, updated)}
           />
         );
+      case "tabs":
+        return (
+          <TabsBlockEditor
+            block={block}
+            onChange={(updated) => updateBlock(block.id, updated)}
+          />
+        );
       default:
         return null;
     }
@@ -163,6 +174,7 @@ export const PageBuilder: React.FC<PageBuilderProps> = ({
     cta: "Call to Action",
     cards: "Card Grid",
     "image-gallery": "Image Gallery",
+    tabs: "Tabs",
   };
 
   return (
@@ -218,6 +230,15 @@ export const PageBuilder: React.FC<PageBuilderProps> = ({
               >
                 <i className="bi bi-images me-1"></i>
                 Gallery
+              </Button>
+              <Button
+                type="button"
+                onClick={() => addBlock("tabs")}
+                variant="outline-dark"
+                size="sm"
+              >
+                <i className="bi bi-layout-text-window me-1"></i>
+                Tabs
               </Button>
             </div>
           </Card.Body>

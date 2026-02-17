@@ -2,9 +2,16 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  font-family: "Inter", system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
   font-weight: 400;
+  color: #1f2937;
+  background-color: #f8fafc;
+  --baseline: 8px;
+  --app-primary: #0f62fe;
+  --app-ink: #0f172a;
+  --app-muted: #6b7280;
+  --app-border: #e2e8f0;
 }
 
 * {
@@ -17,8 +24,167 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background-color: #f8fafc;
 }
 
 #root {
   min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.2;
+  font-weight: 600;
+  color: var(--app-ink);
+  margin-bottom: calc(var(--baseline) * 2);
+}
+
+p,
+li {
+  line-height: 1.7;
+  max-width: 75ch;
+}
+
+.text-prose {
+  max-width: 72ch;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #ffffff;
+  border: 2px solid var(--app-primary);
+  color: var(--app-primary);
+  border-radius: 999px;
+  transform: translateY(-200%);
+  transition: transform 0.2s ease;
+  z-index: 1050;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+:focus-visible {
+  outline: 3px solid var(--app-primary);
+  outline-offset: 3px;
+}
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+  background: #fff;
+}
+
+.app-navbar .navbar-nav {
+  gap: 0.25rem;
+}
+
+.app-nav-link {
+  font-weight: 500;
+  color: var(--app-ink) !important;
+  padding: 0.5rem 0.85rem !important;
+  border-radius: 999px;
+}
+
+.app-nav-link:hover,
+.app-nav-link:focus-visible {
+  background: rgba(15, 98, 254, 0.08);
+}
+
+.app-nav-link.is-active {
+  background: rgba(15, 98, 254, 0.12);
+  color: var(--app-primary) !important;
+  font-weight: 600;
+}
+
+.app-logo {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.app-logo-sub {
+  font-size: 0.85rem;
+  color: var(--app-muted);
+}
+
+.mega-menu .dropdown-menu {
+  width: min(720px, 90vw);
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--app-border);
+  border-radius: 1rem;
+}
+
+.mega-menu__title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--app-muted);
+  margin-bottom: 0.75rem;
+}
+
+.app-main {
+  padding-block: calc(var(--baseline) * 4);
+}
+
+.app-footer {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+.app-footer__brand {
+  font-size: 1rem;
+}
+
+.app-footer__text {
+  color: #cbd5f5;
+  max-width: 50ch;
+  margin-top: 0.5rem;
+}
+
+.app-footer__link {
+  color: #e2e8f0;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.app-footer__link:hover,
+.app-footer__link:focus-visible {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.card-meta {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--app-muted);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.card-link {
+  border: 1px solid var(--app-border);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.card-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+}
+
+.card-link__cta {
+  font-weight: 600;
 }

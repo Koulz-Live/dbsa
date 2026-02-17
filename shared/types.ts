@@ -40,6 +40,7 @@ export type BlockType =
   | "RichText"
   | "CTA"
   | "Cards"
+  | "Tabs"
   | "Accordion"
   | "Stats"
   | "ImageGallery"
