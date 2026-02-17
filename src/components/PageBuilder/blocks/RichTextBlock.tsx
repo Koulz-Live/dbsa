@@ -10,13 +10,13 @@ export const RichTextBlockComponent: React.FC<RichTextBlockComponentProps> = ({
   block,
   isEditing,
 }) => {
-  const { content } = block.data;
+  const { content, fullWidth } = block.data;
 
   return (
     <div className={`p-4 ${isEditing ? "border border-2 border-primary" : ""}`}>
       <div
-        className="container"
-        style={{ maxWidth: "65ch" }}
+        className={fullWidth ? "container-fluid px-0" : "container px-0"}
+        style={{ maxWidth: fullWidth ? "100%" : "65ch" }}
         dangerouslySetInnerHTML={{ __html: content }}
       />
     </div>

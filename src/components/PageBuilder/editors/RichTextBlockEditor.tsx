@@ -36,6 +36,22 @@ export const RichTextBlockEditor: React.FC<RichTextBlockEditorProps> = ({
         </p>
       </div>
 
+      <div className="flex items-center gap-2">
+        <input
+          id={`richtext-full-width-${block.id}`}
+          type="checkbox"
+          checked={block.data.fullWidth || false}
+          onChange={(e) => updateData({ fullWidth: e.target.checked })}
+          className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+        />
+        <label
+          htmlFor={`richtext-full-width-${block.id}`}
+          className="text-sm text-gray-700"
+        >
+          Full width section
+        </label>
+      </div>
+
       <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
         <p className="text-sm text-blue-800">
           <strong>Preview:</strong>

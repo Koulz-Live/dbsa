@@ -34,6 +34,7 @@ export interface RichTextBlock extends BaseBlock {
   type: "richtext";
   data: {
     content: string; // HTML content
+    fullWidth?: boolean;
   };
 }
 

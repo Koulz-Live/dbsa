@@ -142,7 +142,7 @@ export function ContentEditor() {
   const fetchContent = async () => {
     try {
       setLoading(true);
-      const response = await apiClient.get<ContentItem>(`/content/${id}`);
+      const response = await apiClient.get<ContentItem>(`/api/content/${id}`);
       setContent(response.data);
 
       // Populate form
@@ -197,16 +197,19 @@ export function ContentEditor() {
         payload.hero_image_url = formData.hero_image_url;
 
       if (isEditMode) {
-        await apiClient.patch(`/content/${id}`, payload);
+        await apiClient.patch(`/api/content/${id}`, payload);
         alert("Content updated successfully!");
       } else {
-        const response = await apiClient.post<ContentItem>("/content", payload);
+        const response = await apiClient.post<ContentItem>(
+          "/api/content",
+          payload,
+        );
         alert("Content created successfully!");
         navigate(`/content/${response.data.id}`);
       }
     } catch (err: unknown) {
       const error = err as {
-        response?: { data?: { message?: string; details?: any } };
+        response?: { data?: { message?: string; details?: unknown } };
       };
       const errorMessage =
         error.response?.data?.message || "Failed to save content";
@@ -230,11 +233,12 @@ export function ContentEditor() {
       setSaving(true);
       setError(null);
 
-      await apiClient.post(`/workflow/${action}`, { content_id: id });
+      await apiClient.post(`/api/workflow/${action}`, { content_id: id });
       alert(`Action "${action}" completed successfully!`);
       fetchContent(); // Refresh to get updated status
-    } catch (err: any) {
-      setError(err.response?.data?.message || `Failed to ${action}`);
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setError(error.response?.data?.message || `Failed to ${action}`);
     } finally {
       setSaving(false);
     }
