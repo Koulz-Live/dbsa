@@ -16,6 +16,7 @@ import { Navigation } from "../components/Navigation";
 import { apiClient } from "../lib/apiClient";
 import { ContentItem, ContentStatus, Block } from "../../shared/types";
 import { PageBuilder, PageBlock } from "../components/PageBuilder";
+import { TemplateSelector } from "../components/TemplateSelector";
 
 // Types for dropdowns
 interface ContentType {
@@ -71,6 +72,7 @@ export function ContentEditor() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [content, setContent] = useState<ContentItem | null>(null);
+  const [showTemplateSelector, setShowTemplateSelector] = useState(false);
 
   // Dropdown data
   const [contentTypes, setContentTypes] = useState<ContentType[]>([]);
@@ -244,6 +246,10 @@ export function ContentEditor() {
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/(^-|-$)/g, "");
     setFormData({ ...formData, slug });
+  };
+
+  const handleTemplateSelect = (blocks: PageBlock[]) => {
+    setFormData({ ...formData, page_blocks: blocks });
   };
 
   const getStatusBadgeVariant = (status: ContentStatus) => {
@@ -497,7 +503,17 @@ export function ContentEditor() {
                 {/* Page Builder */}
                 <Card className="mb-4">
                   <Card.Body>
-                    <h5 className="card-title mb-4">Page Content</h5>
+                    <div className="d-flex justify-content-between align-items-center mb-4">
+                      <h5 className="card-title mb-0">Page Content</h5>
+                      <Button
+                        variant="outline-primary"
+                        size="sm"
+                        onClick={() => setShowTemplateSelector(true)}
+                      >
+                        <i className="bi bi-file-earmark-text me-1"></i>
+                        Use Template
+                      </Button>
+                    </div>
                     <PageBuilder
                       blocks={formData.page_blocks}
                       onChange={(blocks) =>
@@ -506,6 +522,13 @@ export function ContentEditor() {
                     />
                   </Card.Body>
                 </Card>
+
+                {/* Template Selector Modal */}
+                <TemplateSelector
+                  show={showTemplateSelector}
+                  onHide={() => setShowTemplateSelector(false)}
+                  onSelectTemplate={handleTemplateSelect}
+                />
 
                 {/* Form Actions */}
                 <div className="d-flex gap-2 mb-4">

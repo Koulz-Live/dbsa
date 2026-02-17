@@ -7,6 +7,7 @@ import { ContentEditor } from "./pages/ContentEditor";
 import { Dashboard } from "./pages/Dashboard";
 import { AuditLogs } from "./pages/AuditLogs";
 import { Login } from "./pages/Login";
+import { TemplatesPreview } from "./pages/TemplatesPreview";
 import { initializeCsrfToken } from "./lib/csrf";
 
 function App() {
@@ -33,6 +34,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ContentList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/templates"
+            element={
+              <ProtectedRoute>
+                <TemplatesPreview />
               </ProtectedRoute>
             }
           />

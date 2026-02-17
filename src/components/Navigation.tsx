@@ -44,6 +44,9 @@ export const Navigation = () => {
           <Nav.Link as={Link} to="/content" active={isActive("/content")}>
             Content
           </Nav.Link>
+          <Nav.Link as={Link} to="/templates" active={isActive("/templates")}>
+            Templates
+          </Nav.Link>
           <Nav.Link as={Link} to="/audit-logs" active={isActive("/audit-logs")}>
             Audit Logs
           </Nav.Link>
@@ -63,6 +66,9 @@ export const Navigation = () => {
             </Dropdown.Item>
             <Dropdown.Item as={Link} to="/content">
               📄 Content
+            </Dropdown.Item>
+            <Dropdown.Item as={Link} to="/templates">
+              🎨 Templates
             </Dropdown.Item>
             <Dropdown.Item as={Link} to="/content/new">
               ➕ New Content
