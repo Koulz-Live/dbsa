@@ -337,33 +337,6 @@ export const landingPageTemplate: PageTemplate = {
       },
     },
     {
-      type: "image-gallery",
-      data: {
-        title: "Case study highlights",
-        layout: "carousel",
-        images: [
-          {
-            id: "case-1",
-            url: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7",
-            alt: "Ferrari case study",
-            caption: "Scuderia Ferrari",
-          },
-          {
-            id: "case-2",
-            url: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d",
-            alt: "Avid Solutions case study",
-            caption: "Avid Solutions",
-          },
-          {
-            id: "case-3",
-            url: "https://images.unsplash.com/photo-1521790366329-6a2b0f6dfc2a",
-            alt: "Pfizer case study",
-            caption: "Pfizer",
-          },
-        ],
-      },
-    },
-    {
       type: "richtext",
       data: {
         content: `
